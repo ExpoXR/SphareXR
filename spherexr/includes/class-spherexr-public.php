@@ -26,6 +26,7 @@ class SphereXR_Public {
 
 		$payload = array(
 			'animations' => $configs,
+			'coreUrl'    => SPHEREXR_PLUGIN_URL . 'public/js/spherexr-core.js?ver=' . SPHEREXR_VERSION,
 			'engineUrl'  => SPHEREXR_PLUGIN_URL . 'public/js/spherexr-engine.js?ver=' . SPHEREXR_VERSION,
 			'cssUrl'     => SPHEREXR_PLUGIN_URL . 'public/css/spherexr.css?ver=' . SPHEREXR_VERSION,
 			'settings'   => array(

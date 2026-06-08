@@ -129,6 +129,7 @@ class SphereXR_REST {
 		return rest_ensure_response( array(
 			'id'     => $post_id,
 			'title'  => $title,
+			'status' => 'publish',
 			'config' => $default_config,
 		) );
 	}
@@ -192,12 +193,15 @@ class SphereXR_REST {
 
 		if ( $config ) {
 			$config['animation_id'] = sanitize_title( $new_title );
-			update_post_meta( $new_id, '_spherexr_config', wp_json_encode( $config ) );
+			// Re-validate the copied config so stale/invalid data can't propagate.
+			$clean = SphereXR_CPT::sanitize_config( $config );
+			update_post_meta( $new_id, '_spherexr_config', wp_json_encode( $clean ?: $config ) );
 		}
 
 		return rest_ensure_response( array(
-			'id'    => $new_id,
-			'title' => $new_title,
+			'id'     => $new_id,
+			'title'  => $new_title,
+			'status' => 'publish',
 		) );
 	}
 
@@ -209,8 +213,12 @@ class SphereXR_REST {
 
 		$raw    = get_post_meta( $post->ID, '_spherexr_config', true );
 		$config = $raw ? json_decode( $raw, true ) : array();
+		if ( ! is_array( $config ) ) $config = array();
 
 		$config['active'] = empty( $config['active'] );
+		// Re-validate when possible so a toggle can't persist malformed config.
+		$clean = SphereXR_CPT::sanitize_config( $config );
+		if ( $clean ) $config = $clean;
 		update_post_meta( $post->ID, '_spherexr_config', wp_json_encode( $config ) );
 
 		return rest_ensure_response( array(

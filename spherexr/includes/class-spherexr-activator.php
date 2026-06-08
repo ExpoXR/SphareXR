@@ -9,7 +9,7 @@ class SphereXR_Activator {
 		SphereXR_CPT::register();
 		flush_rewrite_rules();
 
-		// Set default options if not present
+		// Set default options if not present (autoload disabled — read on demand)
 		if ( ! get_option( 'spherexr_settings' ) ) {
 			add_option( 'spherexr_settings', array(
 				'dpr_cap'                 => 1.75,
@@ -18,7 +18,7 @@ class SphereXR_Activator {
 				'default_speed'           => 1.0,
 				'default_safe_margin'     => 5,
 				'default_blend_mode'      => 'screen',
-			) );
+			), '', 'no' );
 		}
 	}
 }

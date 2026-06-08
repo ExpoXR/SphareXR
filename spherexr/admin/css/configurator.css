@@ -30,7 +30,7 @@
 	border: 1px solid transparent;
 	background: transparent;
 	padding: 2px 4px;
-	border-radius: 3px;
+	border-radius: var(--sxr-radius-sm);
 	width: 100%;
 	box-sizing: border-box;
 	transition: border-color 0.15s, background 0.15s;
@@ -107,7 +107,7 @@
 .spherexr-global-bar select {
 	font-size: 12px;
 	padding: 4px 8px;
-	border-radius: 4px;
+	border-radius: var(--sxr-radius);
 	border: 1px solid var(--sxr-border);
 	background: var(--sxr-surface);
 	color: var(--sxr-text);
@@ -131,7 +131,7 @@
 	height: 28px;
 	padding: 2px;
 	border: 1px solid var(--sxr-border);
-	border-radius: 4px;
+	border-radius: var(--sxr-radius);
 	cursor: pointer;
 	background: none;
 	flex-shrink: 0;
@@ -140,7 +140,7 @@
 .sxr-preview-bg-row input[type="text"] {
 	font-size: 12px;
 	padding: 4px 8px;
-	border-radius: 4px;
+	border-radius: var(--sxr-radius);
 	border: 1px solid var(--sxr-border);
 	background: var(--sxr-surface);
 	color: var(--sxr-text);
@@ -273,31 +273,32 @@
 	gap: 4px;
 }
 
-.sxr-bp-btn {
-	font-size: 10px !important;
-	padding: 1px 8px !important;
-	height: auto !important;
-	min-height: 0 !important;
-	line-height: 1.7 !important;
-	color: rgba(255,255,255,0.75) !important;
-	border-color: rgba(255,255,255,0.35) !important;
-	background: rgba(255,255,255,0.1) !important;
-	box-shadow: none !important;
+/* Scoped under the preview label so we override WP's .button without !important */
+.sxr-preview-label .sxr-breakpoint-picker .sxr-bp-btn {
+	font-size: 10px;
+	padding: 1px 8px;
+	height: auto;
+	min-height: 0;
+	line-height: 1.7;
+	color: rgba(255,255,255,0.75);
+	border-color: rgba(255,255,255,0.35);
+	background: rgba(255,255,255,0.1);
+	box-shadow: none;
 	text-transform: none;
 	letter-spacing: 0;
 	transition: background 0.15s, color 0.15s;
 }
 
-.sxr-bp-btn:hover {
-	color: #fff !important;
-	border-color: rgba(255,255,255,0.6) !important;
-	background: rgba(255,255,255,0.2) !important;
+.sxr-preview-label .sxr-breakpoint-picker .sxr-bp-btn:hover {
+	color: #fff;
+	border-color: rgba(255,255,255,0.6);
+	background: rgba(255,255,255,0.2);
 }
 
-.sxr-bp-btn.is-active {
-	background: var(--sxr-accent) !important;
-	color: #fff !important;
-	border-color: var(--sxr-accent) !important;
+.sxr-preview-label .sxr-breakpoint-picker .sxr-bp-btn.is-active {
+	background: var(--sxr-accent);
+	color: #fff;
+	border-color: var(--sxr-accent);
 }
 
 .sxr-preview-size-row {
@@ -311,7 +312,7 @@
 	padding: 2px 4px;
 	font-size: 11px;
 	border: 1px solid rgba(255,255,255,0.35);
-	border-radius: 3px;
+	border-radius: var(--sxr-radius-sm);
 	background: rgba(255,255,255,0.12);
 	color: rgba(255,255,255,0.9);
 	text-align: center;
@@ -328,16 +329,16 @@
 	font-size: 11px;
 }
 
-.sxr-preview-size-row .button {
-	font-size: 10px !important;
-	padding: 1px 7px !important;
-	height: auto !important;
-	min-height: 0 !important;
-	line-height: 1.7 !important;
-	color: rgba(255,255,255,0.75) !important;
-	border-color: rgba(255,255,255,0.35) !important;
-	background: rgba(255,255,255,0.1) !important;
-	box-shadow: none !important;
+.sxr-preview-label .sxr-preview-size-row .button {
+	font-size: 10px;
+	padding: 1px 7px;
+	height: auto;
+	min-height: 0;
+	line-height: 1.7;
+	color: rgba(255,255,255,0.75);
+	border-color: rgba(255,255,255,0.35);
+	background: rgba(255,255,255,0.1);
+	box-shadow: none;
 	text-transform: none;
 	letter-spacing: 0;
 }
@@ -420,7 +421,7 @@
 	background: var(--sxr-surface);
 	border: 1px solid var(--sxr-border);
 	color: var(--sxr-text);
-	border-radius: 4px;
+	border-radius: var(--sxr-radius);
 	padding: 5px 8px;
 	font-size: 13px;
 	width: 100%;
@@ -474,7 +475,7 @@
 	gap: 6px;
 	padding: 10px;
 	border: 1px solid var(--sxr-border);
-	border-radius: 4px;
+	border-radius: var(--sxr-radius);
 	cursor: pointer;
 	transition: border-color 0.15s;
 	font-size: 11px;
@@ -490,7 +491,7 @@
 	width: 40px;
 	height: 40px;
 	border-radius: 50%;
-	background: radial-gradient(circle, rgba(34,113,177,0.7) 0%, rgba(34,113,177,0) 70%);
+	background: radial-gradient(circle, rgba(var(--sxr-accent-rgb),0.7) 0%, rgba(var(--sxr-accent-rgb),0) 70%);
 	position: relative;
 }
 
@@ -501,7 +502,7 @@
 	width: 28px;
 	height: 28px;
 	border-radius: 50%;
-	background: radial-gradient(circle, rgba(0,163,42,0.7) 0%, rgba(0,163,42,0) 70%);
+	background: radial-gradient(circle, rgba(var(--sxr-active-rgb),0.7) 0%, rgba(var(--sxr-active-rgb),0) 70%);
 	top: 50%;
 	left: 60%;
 	transform: translate(-50%, -50%);
@@ -512,8 +513,8 @@
 }
 
 /* ---- Color picker WP override ---- */
-.wp-picker-container .wp-color-result {
-	border-radius: 4px !important;
+.sxr-orb-config .wp-picker-container .wp-color-result {
+	border-radius: var(--sxr-radius);
 }
 
 /* ---- Drag handle ---- */
@@ -537,7 +538,7 @@
 	font-weight: 600;
 	color: var(--sxr-accent);
 	background: var(--sxr-accent-muted);
-	border: 1px solid rgba(34, 113, 177, 0.2);
+	border: 1px solid rgba(var(--sxr-accent-rgb), 0.2);
 	border-radius: 10px;
 	padding: 1px 6px;
 	flex-shrink: 0;
@@ -550,7 +551,7 @@
 	background: var(--sxr-surface) !important;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 	border-left-color: var(--sxr-accent) !important;
-	border-radius: 4px;
+	border-radius: var(--sxr-radius);
 	list-style: none;
 	opacity: 0.95;
 }

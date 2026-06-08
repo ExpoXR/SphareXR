@@ -57,12 +57,12 @@ class SphereXR_CPT {
 	public static function sanitize_config( $raw ) {
 		if ( ! is_array( $raw ) ) return false;
 
-		$allowed_blend  = array( 'screen', 'normal', 'multiply', 'overlay', 'lighten', 'hard-light' );
-		$allowed_modes  = array( 'parallax', 'repel', 'attract', 'follow', 'none' );
-		$allowed_shapes = array( 'circle', 'double', 'triple', 'blob' );
-		$allowed_anims  = array( 'drift', 'orbit', 'pulse', 'wave', 'fixed', 'figure8' );
-		$allowed_units  = array( 'percent', 'px', 'vw', 'vh' );
-		$allowed_cmodes = array( 'solid', 'dual', 'gradient' );
+		$allowed_blend  = SphereXR_Schema::BLEND_MODES;
+		$allowed_modes  = SphereXR_Schema::INTERACTIVITY_MODES;
+		$allowed_shapes = SphereXR_Schema::SHAPES;
+		$allowed_anims  = SphereXR_Schema::ANIM_TYPES;
+		$allowed_units  = SphereXR_Schema::UNITS;
+		$allowed_cmodes = SphereXR_Schema::COLOR_MODES;
 
 		$animation_id = sanitize_title( $raw['animation_id'] ?? '' );
 		if ( ! $animation_id ) return false;

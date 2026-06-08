@@ -89,7 +89,7 @@ class SphereXR_Settings {
 	}
 
 	public function sanitize( $input ) {
-		$allowed_blend = array( 'screen', 'normal', 'multiply', 'overlay', 'lighten', 'hard-light' );
+		$allowed_blend = SphereXR_Schema::BLEND_MODES;
 
 		return array(
 			'dpr_cap'                => max( 1.0, min( 3.0, (float) ( $input['dpr_cap'] ?? 1.75 ) ) ),
@@ -156,7 +156,7 @@ class SphereXR_Settings {
 	public function field_default_blend_mode() {
 		$opts    = get_option( self::OPTION_KEY, array() );
 		$current = $opts['default_blend_mode'] ?? 'screen';
-		$modes   = array( 'screen', 'normal', 'multiply', 'overlay', 'lighten', 'hard-light' );
+		$modes   = SphereXR_Schema::BLEND_MODES;
 		echo '<select name="' . esc_attr( self::OPTION_KEY ) . '[default_blend_mode]">';
 		foreach ( $modes as $mode ) {
 			printf(

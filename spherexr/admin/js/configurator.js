@@ -9,6 +9,8 @@
 	var container = document.getElementById('spherexr-configurator');
 	if (!container) return;
 
+	var Core = window.SphereXRCore;
+
 	var raw        = JSON.parse(container.getAttribute('data-config') || '{}');
 	var postId     = raw.postId || 0;
 	var isNew      = raw.isNew || false;
@@ -305,6 +307,9 @@
 		};
 	}
 
+	var orbListEl    = document.getElementById('sxr-orb-list');
+	var sortableInit = false;
+
 	document.getElementById('sxr-add-orb-btn').addEventListener('click', function () {
 		config.orbs.push(newOrb());
 		renderOrbList();
@@ -312,53 +317,68 @@
 		refreshPreview();
 	});
 
-	function renderOrbList() {
-		var list = document.getElementById('sxr-orb-list');
-		// Destroy sortable before rebuilding DOM
-		if (typeof jQuery !== 'undefined' && jQuery.fn.sortable) {
-			try { jQuery(list).sortable('destroy'); } catch (e) {}
-		}
-		list.innerHTML = '';
-		config.orbs.forEach(function (orb, idx) {
-			var li = document.createElement('li');
-			li.className = 'sxr-orb-item' + (idx === selectedOrbIdx ? ' is-selected' : '');
-			li.setAttribute('data-orb-id', orb.id);
-			li.innerHTML =
-				'<span class="sxr-drag-handle" title="Drag to reorder">&#8942;&#8942;</span>' +
-				'<span class="sxr-orb-swatch" style="background:' + orb.color + ';color:' + orb.color + '"></span>' +
-				'<span class="sxr-orb-label">Orb ' + (idx + 1) + ' <small>(' + orb.shape + ')</small></span>' +
-				'<span class="sxr-layer-badge" title="Layer (1 = renders on top)">' + (idx + 1) + '</span>' +
-				'<button class="sxr-orb-remove" title="Remove">&times;</button>';
+	// Single delegated click handler (set up once) — avoids per-row listeners
+	if (orbListEl) {
+		orbListEl.addEventListener('click', function (e) {
+			var li = e.target.closest('.sxr-orb-item');
+			if (!li) return;
+			var idx = Array.prototype.indexOf.call(orbListEl.children, li);
+			if (idx < 0) return;
 
-			li.addEventListener('click', function (e) {
-				if (e.target.classList.contains('sxr-orb-remove')) {
-					config.orbs.splice(idx, 1);
-					if (selectedOrbIdx >= config.orbs.length) selectedOrbIdx = config.orbs.length - 1;
-					renderOrbList();
-					if (selectedOrbIdx >= 0) {
-						selectOrb(selectedOrbIdx);
-					} else {
-						var fieldsEl = document.querySelector('.sxr-orb-fields');
-						var noSelEl  = document.querySelector('.sxr-no-selection');
-						if (fieldsEl) fieldsEl.classList.add('is-hidden');
-						if (noSelEl)  noSelEl.classList.remove('is-hidden');
-					}
-					refreshPreview();
-					return;
+			if (e.target.classList.contains('sxr-orb-remove')) {
+				config.orbs.splice(idx, 1);
+				if (selectedOrbIdx >= config.orbs.length) selectedOrbIdx = config.orbs.length - 1;
+				renderOrbList();
+				if (selectedOrbIdx >= 0) {
+					selectOrb(selectedOrbIdx);
+				} else {
+					var fieldsEl = document.querySelector('.sxr-orb-fields');
+					var noSelEl  = document.querySelector('.sxr-no-selection');
+					if (fieldsEl) fieldsEl.classList.add('is-hidden');
+					if (noSelEl)  noSelEl.classList.remove('is-hidden');
 				}
-				if (!e.target.classList.contains('sxr-drag-handle')) {
-					selectOrb(idx);
-				}
-			});
-
-			list.appendChild(li);
+				refreshPreview();
+				return;
+			}
+			if (!e.target.classList.contains('sxr-drag-handle')) {
+				selectOrb(idx);
+			}
 		});
-		initSortable();
 	}
 
-	function initSortable() {
+	// Rebuild the list DOM (structural changes only: add / remove / reorder / relabel)
+	function renderOrbList() {
+		if (!orbListEl) return;
+		var html = '';
+		config.orbs.forEach(function (orb, idx) {
+			html +=
+				'<li class="sxr-orb-item' + (idx === selectedOrbIdx ? ' is-selected' : '') + '" data-orb-id="' + orb.id + '">' +
+					'<span class="sxr-drag-handle" title="Drag to reorder" aria-label="Drag to reorder">&#8942;&#8942;</span>' +
+					'<span class="sxr-orb-swatch" style="background:' + orb.color + ';color:' + orb.color + '"></span>' +
+					'<span class="sxr-orb-label">Orb ' + (idx + 1) + ' <small>(' + orb.shape + ')</small></span>' +
+					'<span class="sxr-layer-badge" title="Layer (1 = renders on top)">' + (idx + 1) + '</span>' +
+					'<button class="sxr-orb-remove" title="Remove" aria-label="Remove orb">&times;</button>' +
+				'</li>';
+		});
+		orbListEl.innerHTML = html;
+		ensureSortable();
+	}
+
+	// Update only the selected-row highlight without rebuilding the DOM
+	function updateOrbSelection() {
+		if (!orbListEl) return;
+		var items = orbListEl.children;
+		for (var i = 0; i < items.length; i++) {
+			items[i].classList.toggle('is-selected', i === selectedOrbIdx);
+		}
+	}
+
+	// Initialise jQuery UI Sortable once, then just refresh on subsequent rebuilds
+	function ensureSortable() {
 		if (typeof jQuery === 'undefined' || !jQuery.fn.sortable) return;
-		var $list = jQuery('#sxr-orb-list');
+		var $list = jQuery(orbListEl);
+		if (sortableInit) { $list.sortable('refresh'); return; }
+		sortableInit = true;
 		$list.sortable({
 			handle: '.sxr-drag-handle',
 			axis: 'y',
@@ -395,7 +415,7 @@
 
 	function selectOrb(idx) {
 		selectedOrbIdx = idx;
-		renderOrbList();
+		updateOrbSelection();
 
 		var fieldsEl   = document.querySelector('.sxr-orb-fields');
 		var noSelEl    = document.querySelector('.sxr-no-selection');
@@ -615,9 +635,13 @@
 	document.querySelectorAll('.sxr-tab').forEach(function (tab) {
 		tab.addEventListener('click', function () {
 			var paneName = tab.getAttribute('data-tab');
-			document.querySelectorAll('.sxr-tab').forEach(function (t) { t.classList.remove('is-active'); });
+			document.querySelectorAll('.sxr-tab').forEach(function (t) {
+				t.classList.remove('is-active');
+				t.setAttribute('aria-selected', 'false');
+			});
 			document.querySelectorAll('.sxr-tab-pane').forEach(function (p) { p.classList.remove('is-active'); });
 			tab.classList.add('is-active');
+			tab.setAttribute('aria-selected', 'true');
 			var pane = document.querySelector('[data-pane="' + paneName + '"]');
 			if (pane) pane.classList.add('is-active');
 		});
@@ -631,7 +655,6 @@
 	var previewCtx     = previewCanvas ? previewCanvas.getContext('2d', { alpha: true }) : null;
 	var previewRaf     = 0;
 	var previewState   = { w: 0, h: 0, dpr: 1, time: 0, lastTime: 0, running: false };
-	var PHI = 1.61803, E = 2.71828;
 
 	function resizePreview() {
 		if (!previewCanvas) return;
@@ -648,122 +671,32 @@
 	}
 
 	function tickPreview(now) {
-		if (!previewCtx) return;
+		if (!previewCtx || !Core) return;
 		var state = previewState;
 		var dt = Math.min(40, Math.max(0, now - (state.lastTime || now)));
 		state.lastTime = now;
 		state.time += dt * 0.001 * (config.global && config.global.speed || 1.0);
 
-		var w = state.w, h = state.h;
+		var w = state.w, h = state.h, t = state.time;
 		previewCtx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
 		previewCtx.clearRect(0, 0, w, h);
 
 		var blendMode = config.global && config.global.blend_mode || 'screen';
-		var safeMargin = ((config.global && config.global.safe_margin) || 0) / 100;
-		var t = state.time;
+		var safeMargin = (config.global && config.global.safe_margin) || 0;
 
-		var _previewOrbs = config.orbs || [];
-		for (var _pi = _previewOrbs.length - 1; _pi >= 0; _pi--) {
-			var orb = _previewOrbs[_pi];
-			var bw = resolveSize(orb.size.w, orb.size.unit, w, h, 'x');
-			var bh = resolveSize(orb.size.h, orb.size.unit, w, h, 'y');
-			var baseX = resolveSize(orb.position.x, orb.position.unit, w, h, 'x');
-			var baseY = resolveSize(orb.position.y, orb.position.unit, w, h, 'y');
-			var ax = (orb.animation.amplitude_x / 100) * w;
-			var ay = (orb.animation.amplitude_y / 100) * h;
-			var fx = orb.animation.frequency_x;
-			var fy = orb.animation.frequency_y;
-			var ph = orb.animation.phase || 0;
-			var seed = hashSeed(orb.id);
+		previewCtx.globalCompositeOperation = blendMode;
 
-			var ox = 0, oy = 0;
-			var type = orb.animation.type;
-
-			if (type === 'drift') {
-				ox = (Math.sin(t * fx + ph) * 0.68 + Math.sin(t * fx * E + seed) * 0.32) * ax;
-				oy = (Math.cos(t * fy + ph) * 0.68 + Math.cos(t * fy * PHI + seed + 1.4) * 0.32) * ay;
-			} else if (type === 'orbit') {
-				ox = Math.cos(t * fx + ph) * ax;
-				oy = Math.sin(t * fy + ph) * ay;
-			} else if (type === 'pulse') {
-				var scale = 1 + Math.sin(t * fx + ph) * (orb.animation.amplitude_x / 100);
-				bw *= scale; bh *= scale;
-			} else if (type === 'wave') {
-				oy = Math.sin(t * fy + ph) * ay;
-			} else if (type === 'figure8') {
-				ox = Math.sin(t * fx + ph) * ax;
-				oy = Math.sin(t * fy * 2 + ph) * ay * 0.5;
-			}
-
-			// Safe margin clamp — orb center stays within safeMargin% of container edge
-			var smX = w * safeMargin;
-			var smY = h * safeMargin;
-			var finalX = Math.max(smX, Math.min(w - smX, baseX + ox));
-			var finalY = Math.max(smY, Math.min(h - smY, baseY + oy));
-
-			previewCtx.save();
-			previewCtx.filter = 'blur(' + orb.blur + 'px)';
-			previewCtx.globalCompositeOperation = blendMode;
-			previewCtx.globalAlpha = orb.opacity;
-
-			if (orb.shape === 'circle') {
-				drawBlob(previewCtx, finalX, finalY, bw * 0.5, bh * 0.5, orb.color, 1, 0.08);
-			} else if (orb.shape === 'double') {
-				drawBlob(previewCtx, finalX - bw * 0.125, finalY, bw * 0.425, bh * 0.425, orb.color, 1, 0.12);
-				drawBlob(previewCtx, finalX + bw * 0.125, finalY, bw * 0.425, bh * 0.425, orb.color_b || orb.color, 1, 0.12);
-			} else if (orb.shape === 'triple') {
-				drawBlob(previewCtx, finalX,              finalY - bh * 0.15, bw * 0.375, bh * 0.375, orb.color,            1, 0.10);
-				drawBlob(previewCtx, finalX - bw * 0.15, finalY + bh * 0.10, bw * 0.375, bh * 0.375, orb.color_b || orb.color, 1, 0.10);
-				drawBlob(previewCtx, finalX + bw * 0.15, finalY + bh * 0.10, bw * 0.375, bh * 0.375, orb.color_b || orb.color, 1, 0.10);
-			} else if (orb.shape === 'blob') {
-				var blobRx = bw * 0.5 * (1 + Math.sin(t * 0.38 + seed) * 0.15);
-				var blobRy = bh * 0.5 * (1 + Math.cos(t * 0.31 + seed + 1.2) * 0.15);
-				drawBlob(previewCtx, finalX, finalY, blobRx, blobRy, orb.color, 1, 0.14);
-			}
-
-			previewCtx.restore();
+		var orbs = config.orbs || [];
+		for (var i = orbs.length - 1; i >= 0; i--) {
+			var orb   = orbs[i];
+			var seed  = Core.hashSeed(orb.id);
+			var scale = Core.computeOrbScale(orb, t);
+			var pos   = Core.computeOrbPos(orb, seed, t, w, h, safeMargin, 0, 0, 0, 'none', 0, 0);
+			Core.drawOrb(previewCtx, orb, pos, scale, t, seed);
 		}
 
+		previewCtx.globalCompositeOperation = 'source-over';
 		previewRaf = requestAnimationFrame(tickPreview);
-	}
-
-	function drawBlob(ctx, x, y, rx, ry, color, alpha, core) {
-		var r = Math.max(rx, ry);
-		var a = (alpha !== undefined) ? alpha : 1;
-		var coreStop = (core !== undefined) ? core : 0.08;
-		ctx.save();
-		ctx.translate(x, y);
-		if (rx !== ry) ctx.scale(rx / r, ry / r);
-		// Gradient created inside transformed space so it scales with the ellipse
-		var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
-		grad.addColorStop(0, hexToRgba(color, a));
-		grad.addColorStop(coreStop + 0.46, hexToRgba(color, a * 0.68));
-		grad.addColorStop(1, hexToRgba(color, 0));
-		ctx.beginPath();
-		ctx.arc(0, 0, r, 0, Math.PI * 2);
-		ctx.fillStyle = grad;
-		ctx.fill();
-		ctx.restore();
-	}
-
-	function resolveSize(val, unit, w, h, axis) {
-		if (unit === 'percent') return (val / 100) * (axis === 'x' ? w : h);
-		if (unit === 'vw') return (val / 100) * window.innerWidth;
-		if (unit === 'vh') return (val / 100) * window.innerHeight;
-		return parseFloat(val); // px
-	}
-
-	function hexToRgba(hex, alpha) {
-		var r = parseInt(hex.slice(1, 3), 16) || 0;
-		var g = parseInt(hex.slice(3, 5), 16) || 0;
-		var b = parseInt(hex.slice(5, 7), 16) || 0;
-		return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
-	}
-
-	function hashSeed(str) {
-		var h = 0;
-		for (var i = 0; i < str.length; i++) { h = ((h << 5) - h + str.charCodeAt(i)) | 0; }
-		return (h & 0xffff) / 0xffff * Math.PI * 6;
 	}
 
 	function refreshPreview() {

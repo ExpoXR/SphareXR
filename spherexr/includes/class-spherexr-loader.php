@@ -12,6 +12,7 @@ class SphereXR_Loader {
 
 	private function load_dependencies() {
 		require_once SPHEREXR_PLUGIN_DIR . 'includes/class-spherexr-i18n.php';
+		require_once SPHEREXR_PLUGIN_DIR . 'includes/class-spherexr-schema.php';
 		require_once SPHEREXR_PLUGIN_DIR . 'includes/class-spherexr-cpt.php';
 		require_once SPHEREXR_PLUGIN_DIR . 'includes/class-spherexr-rest.php';
 		require_once SPHEREXR_PLUGIN_DIR . 'includes/class-spherexr-public.php';

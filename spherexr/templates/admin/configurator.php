@@ -46,7 +46,8 @@
 				<?php esc_html_e( 'Preview BG', 'spherexr' ); ?>
 				<?php
 				$preview_bg_val = $config['global']['preview_bg'] ?? 'transparent';
-				$preview_bg_hex = preg_match( '/^#[0-9a-f]{6}$/i', $preview_bg_val ) ? $preview_bg_val : '#0f0c1a';
+				$preview_bg_hex = sanitize_hex_color( $preview_bg_val );
+				if ( ! $preview_bg_hex ) { $preview_bg_hex = '#0f0c1a'; }
 				?>
 				<div class="sxr-preview-bg-row">
 					<input type="color" id="sxr-preview-bg-hex" value="<?php echo esc_attr( $preview_bg_hex ); ?>">
@@ -75,7 +76,7 @@
 			<label>
 				<?php esc_html_e( 'Blend Mode', 'spherexr' ); ?>
 				<select id="sxr-blend-mode">
-					<?php foreach ( array( 'screen', 'normal', 'multiply', 'overlay', 'lighten', 'hard-light' ) as $bm ) : ?>
+					<?php foreach ( SphereXR_Schema::BLEND_MODES as $bm ) : ?>
 						<option value="<?php echo esc_attr( $bm ); ?>" <?php selected( $config['global']['blend_mode'] ?? 'screen', $bm ); ?>><?php echo esc_html( $bm ); ?></option>
 					<?php endforeach; ?>
 				</select>
@@ -90,7 +91,7 @@
 				<label>
 					<?php esc_html_e( 'Mode', 'spherexr' ); ?>
 					<select id="sxr-interact-mode">
-						<?php foreach ( array( 'parallax', 'repel', 'attract', 'follow', 'none' ) as $m ) : ?>
+						<?php foreach ( SphereXR_Schema::INTERACTIVITY_MODES as $m ) : ?>
 							<option value="<?php echo esc_attr( $m ); ?>" <?php selected( $config['global']['interactivity']['mode'] ?? 'parallax', $m ); ?>><?php echo esc_html( $m ); ?></option>
 						<?php endforeach; ?>
 					</select>
@@ -157,16 +158,16 @@
 
 					<div class="sxr-orb-fields is-hidden">
 						<!-- Tabs -->
-						<div class="sxr-tabs">
-							<button class="sxr-tab is-active" data-tab="shape"><?php esc_html_e( 'Shape', 'spherexr' ); ?></button>
-							<button class="sxr-tab" data-tab="color"><?php esc_html_e( 'Color', 'spherexr' ); ?></button>
-							<button class="sxr-tab" data-tab="size"><?php esc_html_e( 'Size & Position', 'spherexr' ); ?></button>
-							<button class="sxr-tab" data-tab="anim"><?php esc_html_e( 'Animation', 'spherexr' ); ?></button>
-							<button class="sxr-tab" data-tab="interact"><?php esc_html_e( 'Interaction', 'spherexr' ); ?></button>
+						<div class="sxr-tabs" role="tablist">
+							<button type="button" class="sxr-tab is-active" data-tab="shape" role="tab" aria-selected="true" aria-controls="sxr-pane-shape"><?php esc_html_e( 'Shape', 'spherexr' ); ?></button>
+							<button type="button" class="sxr-tab" data-tab="color" role="tab" aria-selected="false" aria-controls="sxr-pane-color"><?php esc_html_e( 'Color', 'spherexr' ); ?></button>
+							<button type="button" class="sxr-tab" data-tab="size" role="tab" aria-selected="false" aria-controls="sxr-pane-size"><?php esc_html_e( 'Size & Position', 'spherexr' ); ?></button>
+							<button type="button" class="sxr-tab" data-tab="anim" role="tab" aria-selected="false" aria-controls="sxr-pane-anim"><?php esc_html_e( 'Animation', 'spherexr' ); ?></button>
+							<button type="button" class="sxr-tab" data-tab="interact" role="tab" aria-selected="false" aria-controls="sxr-pane-interact"><?php esc_html_e( 'Interaction', 'spherexr' ); ?></button>
 						</div>
 
 						<!-- Shape tab -->
-						<div class="sxr-tab-pane is-active" data-pane="shape">
+						<div class="sxr-tab-pane is-active" data-pane="shape" id="sxr-pane-shape" role="tabpanel">
 							<div class="sxr-shape-grid">
 								<?php foreach ( array(
 									'circle'  => __( 'Circle', 'spherexr' ),
@@ -201,7 +202,7 @@
 						</div>
 
 						<!-- Color tab -->
-						<div class="sxr-tab-pane" data-pane="color">
+						<div class="sxr-tab-pane" data-pane="color" id="sxr-pane-color" role="tabpanel">
 							<div class="sxr-field">
 								<label><?php esc_html_e( 'Color Mode', 'spherexr' ); ?></label>
 								<select id="sxr-orb-color-mode">
@@ -221,7 +222,7 @@
 						</div>
 
 						<!-- Size & Position tab -->
-						<div class="sxr-tab-pane" data-pane="size">
+						<div class="sxr-tab-pane" data-pane="size" id="sxr-pane-size" role="tabpanel">
 							<div class="sxr-field">
 								<label><?php esc_html_e( 'Size Unit', 'spherexr' ); ?></label>
 								<select id="sxr-orb-size-unit">
@@ -279,7 +280,7 @@
 						</div>
 
 						<!-- Animation tab -->
-						<div class="sxr-tab-pane" data-pane="anim">
+						<div class="sxr-tab-pane" data-pane="anim" id="sxr-pane-anim" role="tabpanel">
 							<div class="sxr-field">
 								<label><?php esc_html_e( 'Animation Type', 'spherexr' ); ?></label>
 								<select id="sxr-orb-anim-type">
@@ -330,7 +331,7 @@
 						</div>
 
 						<!-- Interaction tab -->
-						<div class="sxr-tab-pane" data-pane="interact">
+						<div class="sxr-tab-pane" data-pane="interact" id="sxr-pane-interact" role="tabpanel">
 							<div class="sxr-field">
 								<label><?php esc_html_e( 'Parallax Depth', 'spherexr' ); ?></label>
 								<div class="sxr-slider-row">

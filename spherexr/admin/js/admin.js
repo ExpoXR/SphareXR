@@ -5,6 +5,7 @@
 	var api = window.SphereXRAdmin || {};
 	var restUrl = api.restUrl || '';
 	var nonce = api.nonce || '';
+	var Core = window.SphereXRCore;
 
 	function apiFetch(path, method, body) {
 		return fetch(restUrl + path, {
@@ -127,7 +128,7 @@
 		el.id = 'sxr-dash-modal';
 		el.innerHTML =
 			'<div id="sxr-dash-modal-backdrop"></div>' +
-			'<div id="sxr-dash-modal-inner">' +
+			'<div id="sxr-dash-modal-inner" role="dialog" aria-modal="true" aria-labelledby="sxr-dash-modal-title">' +
 				'<div id="sxr-dash-modal-header">' +
 					'<span id="sxr-dash-modal-title"></span>' +
 					'<div id="sxr-dash-modal-bg-row">' +
@@ -206,51 +207,11 @@
 		});
 	}
 
-	/* ---- Mini rendering engine (mirrors configurator preview) ---- */
-
-	var _PHI = 1.61803, _E = 2.71828;
-
-	function _hexToRgba(hex, alpha) {
-		var r = parseInt(hex.slice(1, 3), 16) || 0;
-		var g = parseInt(hex.slice(3, 5), 16) || 0;
-		var b = parseInt(hex.slice(5, 7), 16) || 0;
-		return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
-	}
-
-	function _hashSeed(str) {
-		var h = 0;
-		for (var i = 0; i < str.length; i++) { h = ((h << 5) - h + str.charCodeAt(i)) | 0; }
-		return (h & 0xffff) / 0xffff * Math.PI * 6;
-	}
-
-	function _resolveSize(val, unit, w, h, axis) {
-		if (unit === 'percent') return (val / 100) * (axis === 'x' ? w : h);
-		if (unit === 'vw') return (val / 100) * window.innerWidth;
-		if (unit === 'vh') return (val / 100) * window.innerHeight;
-		return parseFloat(val);
-	}
-
-	function _drawBlob(ctx, x, y, rx, ry, color, alpha, core) {
-		var r = Math.max(rx, ry);
-		var a = (alpha !== undefined) ? alpha : 1;
-		var coreStop = (core !== undefined) ? core : 0.08;
-		ctx.save();
-		ctx.translate(x, y);
-		if (rx !== ry) ctx.scale(rx / r, ry / r);
-		// Gradient created inside transformed space so it scales with the ellipse
-		var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
-		grad.addColorStop(0, _hexToRgba(color, a));
-		grad.addColorStop(coreStop + 0.46, _hexToRgba(color, a * 0.68));
-		grad.addColorStop(1, _hexToRgba(color, 0));
-		ctx.beginPath();
-		ctx.arc(0, 0, r, 0, Math.PI * 2);
-		ctx.fillStyle = grad;
-		ctx.fill();
-		ctx.restore();
-	}
+	/* ---- Mini preview (shared SphereXRCore rendering, no interactivity) ---- */
 
 	function startModalPreview(config) {
 		if (_modalRaf) { cancelAnimationFrame(_modalRaf); _modalRaf = 0; }
+		if (!Core) return;
 
 		var canvas = document.getElementById('sxr-dash-modal-canvas');
 		if (!canvas) return;
@@ -277,67 +238,17 @@
 			ctx.clearRect(0, 0, w, h);
 
 			var blendMode  = (config.global && config.global.blend_mode)  || 'screen';
-			var safeMargin = ((config.global && config.global.safe_margin) || 0) / 100;
+			var safeMargin = (config.global && config.global.safe_margin) || 0;
 
 			ctx.globalCompositeOperation = blendMode;
 
-			var _modalOrbs = config.orbs || [];
-			for (var _mi = _modalOrbs.length - 1; _mi >= 0; _mi--) {
-				var orb    = _modalOrbs[_mi];
-				var bw     = _resolveSize(orb.size.w, orb.size.unit, w, h, 'x');
-				var bh     = _resolveSize(orb.size.h, orb.size.unit, w, h, 'y');
-				var baseX  = _resolveSize(orb.position.x, orb.position.unit, w, h, 'x');
-				var baseY  = _resolveSize(orb.position.y, orb.position.unit, w, h, 'y');
-				var ax     = (orb.animation.amplitude_x / 100) * w;
-				var ay     = (orb.animation.amplitude_y / 100) * h;
-				var fx     = orb.animation.frequency_x;
-				var fy     = orb.animation.frequency_y;
-				var ph     = orb.animation.phase || 0;
-				var seed   = _hashSeed(orb.id);
-				var type   = orb.animation.type;
-				var ox = 0, oy = 0;
-
-				if (type === 'drift') {
-					ox = (Math.sin(t * fx + ph) * 0.68 + Math.sin(t * fx * _E   + seed)       * 0.32) * ax;
-					oy = (Math.cos(t * fy + ph) * 0.68 + Math.cos(t * fy * _PHI + seed + 1.4) * 0.32) * ay;
-				} else if (type === 'orbit') {
-					ox = Math.cos(t * fx + ph) * ax;
-					oy = Math.sin(t * fy + ph) * ay;
-				} else if (type === 'pulse') {
-					var sc = 1 + Math.sin(t * fx + ph) * (orb.animation.amplitude_x / 100);
-					bw *= sc; bh *= sc;
-				} else if (type === 'wave') {
-					oy = Math.sin(t * fy + ph) * ay;
-				} else if (type === 'figure8') {
-					ox = Math.sin(t * fx + ph) * ax;
-					oy = Math.sin(t * fy * 2 + ph) * ay * 0.5;
-				}
-
-				var smX    = w * safeMargin;
-				var smY    = h * safeMargin;
-				var finalX = Math.max(smX, Math.min(w - smX, baseX + ox));
-				var finalY = Math.max(smY, Math.min(h - smY, baseY + oy));
-
-				ctx.save();
-				ctx.filter = 'blur(' + orb.blur + 'px)';
-				ctx.globalAlpha = orb.opacity;
-
-				if (orb.shape === 'circle') {
-					_drawBlob(ctx, finalX, finalY, bw * 0.5, bh * 0.5, orb.color, 1, 0.08);
-				} else if (orb.shape === 'double') {
-					_drawBlob(ctx, finalX - bw * 0.125, finalY, bw * 0.425, bh * 0.425, orb.color,            1, 0.12);
-					_drawBlob(ctx, finalX + bw * 0.125, finalY, bw * 0.425, bh * 0.425, orb.color_b || orb.color, 1, 0.12);
-				} else if (orb.shape === 'triple') {
-					_drawBlob(ctx, finalX,              finalY - bh * 0.15, bw * 0.375, bh * 0.375, orb.color,            1, 0.10);
-					_drawBlob(ctx, finalX - bw * 0.15, finalY + bh * 0.10, bw * 0.375, bh * 0.375, orb.color_b || orb.color, 1, 0.10);
-					_drawBlob(ctx, finalX + bw * 0.15, finalY + bh * 0.10, bw * 0.375, bh * 0.375, orb.color_b || orb.color, 1, 0.10);
-				} else if (orb.shape === 'blob') {
-					var blobRx = bw * 0.5 * (1 + Math.sin(t * 0.38 + seed) * 0.15);
-					var blobRy = bh * 0.5 * (1 + Math.cos(t * 0.31 + seed + 1.2) * 0.15);
-					_drawBlob(ctx, finalX, finalY, blobRx, blobRy, orb.color, 1, 0.14);
-				}
-
-				ctx.restore();
+			var orbs = config.orbs || [];
+			for (var i = orbs.length - 1; i >= 0; i--) {
+				var orb   = orbs[i];
+				var seed  = Core.hashSeed(orb.id);
+				var scale = Core.computeOrbScale(orb, t);
+				var pos   = Core.computeOrbPos(orb, seed, t, w, h, safeMargin, 0, 0, 0, 'none', 0, 0);
+				Core.drawOrb(ctx, orb, pos, scale, t, seed);
 			}
 
 			ctx.globalCompositeOperation = 'source-over';

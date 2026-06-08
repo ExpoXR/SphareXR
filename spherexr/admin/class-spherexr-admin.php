@@ -79,10 +79,19 @@ class SphereXR_Admin {
 			SPHEREXR_VERSION
 		);
 
+		// Shared rendering core (math + canvas helpers) used by previews
+		wp_register_script(
+			'spherexr-core',
+			SPHEREXR_PLUGIN_URL . 'public/js/spherexr-core.js',
+			array(),
+			SPHEREXR_VERSION,
+			true
+		);
+
 		wp_enqueue_script(
 			'spherexr-admin',
 			SPHEREXR_PLUGIN_URL . 'admin/js/admin.js',
-			array( 'wp-api-fetch' ),
+			array( 'wp-api-fetch', 'spherexr-core' ),
 			SPHEREXR_VERSION,
 			true
 		);
@@ -105,7 +114,7 @@ class SphereXR_Admin {
 			wp_enqueue_script(
 				'spherexr-configurator',
 				SPHEREXR_PLUGIN_URL . 'admin/js/configurator.js',
-				array( 'spherexr-admin', 'wp-color-picker', 'jquery-ui-sortable' ),
+				array( 'spherexr-admin', 'spherexr-core', 'wp-color-picker', 'jquery-ui-sortable' ),
 				SPHEREXR_VERSION,
 				true
 			);

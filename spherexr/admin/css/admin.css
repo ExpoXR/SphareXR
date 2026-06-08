@@ -1,0 +1,351 @@
+/* SphereXR — Admin Base Styles (light WordPress admin theme) */
+
+:root {
+	--sxr-accent:     #2271b1;
+	--sxr-accent-h:   #135e96;
+	--sxr-surface:    #ffffff;
+	--sxr-surface-2:  #f6f7f7;
+	--sxr-border:     #dcdcde;
+	--sxr-text:       #1d2327;
+	--sxr-text-muted: #646970;
+	--sxr-active:     #00a32a;
+	--sxr-inactive:   #8c8f94;
+	--sxr-danger:     #d63638;
+}
+
+/* ---- Wrapper ---- */
+.spherexr-wrap {
+	color: var(--sxr-text);
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ---- Header ---- */
+.spherexr-header {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	padding: 20px 0 16px;
+	border-bottom: 1px solid var(--sxr-border);
+	margin-bottom: 24px;
+	flex-wrap: wrap;
+}
+
+.spherexr-logo {
+	margin: 0;
+	font-size: 22px;
+	font-weight: 700;
+	letter-spacing: -0.5px;
+	color: var(--sxr-accent);
+}
+
+.spherexr-tagline {
+	margin: 0;
+	color: var(--sxr-text-muted);
+	font-size: 13px;
+	flex: 1;
+}
+
+.spherexr-btn-new {
+	margin-left: auto;
+}
+
+/* ---- Empty state ---- */
+.spherexr-empty-state {
+	text-align: center;
+	padding: 60px 20px;
+	color: var(--sxr-text-muted);
+}
+
+.spherexr-empty-icon {
+	font-size: 64px;
+	margin-bottom: 16px;
+	opacity: 0.4;
+}
+
+.spherexr-empty-state h2 {
+	color: var(--sxr-text);
+	margin-bottom: 8px;
+}
+
+/* ---- Dashboard Table ---- */
+.spherexr-table {
+	border-radius: 4px;
+	overflow: hidden;
+	border: 1px solid var(--sxr-border);
+}
+
+.spherexr-table th,
+.spherexr-table td {
+	vertical-align: middle;
+	padding: 10px 14px;
+}
+
+.spherexr-id-chip {
+	background: var(--sxr-surface-2);
+	color: var(--sxr-accent);
+	padding: 2px 8px;
+	border-radius: 4px;
+	font-size: 12px;
+	margin-right: 6px;
+	border: 1px solid var(--sxr-border);
+}
+
+.spherexr-copy-btn {
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 11px;
+	color: var(--sxr-text-muted);
+	padding: 2px 4px;
+}
+
+.spherexr-copy-btn:hover { color: var(--sxr-accent); }
+
+.spherexr-no-id {
+	color: var(--sxr-text-muted);
+	font-size: 12px;
+	font-style: italic;
+}
+
+/* ---- Toggle Button ---- */
+.spherexr-toggle-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 12px;
+	border-radius: 20px;
+	border: 1px solid var(--sxr-inactive);
+	background: transparent;
+	color: var(--sxr-inactive);
+	font-size: 12px;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.spherexr-toggle-btn.is-active {
+	border-color: var(--sxr-active);
+	color: var(--sxr-active);
+}
+
+.spherexr-toggle-btn::before {
+	content: '';
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: currentColor;
+}
+
+/* ---- Actions ---- */
+.spherexr-actions { white-space: nowrap; }
+.spherexr-actions .button { margin-right: 4px; }
+
+.spherexr-delete-btn { color: var(--sxr-danger) !important; border-color: var(--sxr-danger) !important; }
+.spherexr-delete-btn:hover { background: var(--sxr-danger) !important; color: #fff !important; }
+
+/* ---- Debug Page ---- */
+.spherexr-debug-section {
+	margin-bottom: 28px;
+}
+
+.spherexr-debug-section h2 {
+	font-size: 15px;
+	margin-bottom: 10px;
+	color: var(--sxr-text);
+	border-bottom: 1px solid var(--sxr-border);
+	padding-bottom: 6px;
+}
+
+.spherexr-json-dump {
+	background: var(--sxr-surface-2);
+	color: var(--sxr-text);
+	padding: 16px;
+	border-radius: 4px;
+	font-size: 12px;
+	line-height: 1.6;
+	overflow-x: auto;
+	max-height: 400px;
+	overflow-y: auto;
+	border: 1px solid var(--sxr-border);
+	white-space: pre;
+}
+
+.spherexr-debug-anim-block {
+	border: 1px solid var(--sxr-border);
+	border-radius: 4px;
+	margin-bottom: 8px;
+	overflow: hidden;
+}
+
+.spherexr-debug-anim-block.is-active { border-color: var(--sxr-active); }
+.spherexr-debug-anim-block.is-inactive { opacity: 0.6; }
+
+.spherexr-debug-anim-header {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 14px;
+	background: var(--sxr-surface-2);
+	flex-wrap: wrap;
+}
+
+.spherexr-status-badge {
+	padding: 2px 8px;
+	border-radius: 20px;
+	font-size: 11px;
+	font-weight: 600;
+	background: var(--sxr-inactive);
+	color: #fff;
+}
+
+.is-active .spherexr-status-badge { background: var(--sxr-active); }
+
+.spherexr-debug-table th { font-weight: 600; width: 220px; }
+
+/* ---- Notifications ---- */
+.spherexr-notice {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	background: var(--sxr-accent);
+	color: #fff;
+	padding: 10px 18px;
+	border-radius: 4px;
+	font-size: 13px;
+	z-index: 9999;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+	opacity: 0;
+	transform: translateY(10px);
+	transition: all 0.3s ease;
+	pointer-events: none;
+}
+
+.spherexr-notice.show { opacity: 1; transform: translateY(0); }
+.spherexr-notice.error { background: var(--sxr-danger); }
+
+/* ---- Preview Modal ---- */
+#sxr-dash-modal {
+	display: none;
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	align-items: center;
+	justify-content: center;
+}
+
+#sxr-dash-modal-backdrop {
+	position: absolute;
+	inset: 0;
+	background: rgba(0,0,0,0.75);
+}
+
+#sxr-dash-modal-inner {
+	position: relative;
+	z-index: 1;
+	width: min(92vw, 1000px);
+	height: min(88vh, 680px);
+	background: #111;
+	border-radius: 6px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
+
+#sxr-dash-modal-header {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 14px;
+	background: #1a1a1a;
+	border-bottom: 1px solid rgba(255,255,255,0.08);
+	flex-shrink: 0;
+}
+
+#sxr-dash-modal-title {
+	font-size: 13px;
+	color: rgba(255,255,255,0.7);
+	flex: 1;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+#sxr-dash-modal-bg-row {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+#sxr-dash-modal-bg-hex {
+	width: 28px;
+	height: 24px;
+	padding: 1px;
+	border: 1px solid rgba(255,255,255,0.2);
+	border-radius: 3px;
+	background: none;
+	cursor: pointer;
+	flex-shrink: 0;
+}
+
+#sxr-dash-modal-bg-text {
+	width: 130px;
+	font-size: 11px;
+	padding: 3px 7px;
+	border-radius: 3px;
+	border: 1px solid rgba(255,255,255,0.2);
+	background: rgba(255,255,255,0.06);
+	color: rgba(255,255,255,0.7);
+	font-family: monospace;
+}
+
+#sxr-dash-modal-bg-transparent {
+	background: none;
+	border: 1px solid rgba(255,255,255,0.2);
+	border-radius: 3px;
+	color: rgba(255,255,255,0.55);
+	font-size: 13px;
+	line-height: 1;
+	cursor: pointer;
+	padding: 2px 7px;
+	flex-shrink: 0;
+}
+
+#sxr-dash-modal-bg-transparent:hover { color: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.5); }
+
+#sxr-dash-modal-close {
+	background: none;
+	border: none;
+	color: rgba(255,255,255,0.45);
+	font-size: 22px;
+	line-height: 1;
+	cursor: pointer;
+	padding: 0 2px;
+	flex-shrink: 0;
+}
+
+#sxr-dash-modal-close:hover { color: rgba(255,255,255,0.9); }
+
+#sxr-dash-modal-canvas-wrap {
+	flex: 1;
+	position: relative;
+	background: transparent; /* Default — overridden by JS from config.global.preview_bg */
+	overflow: hidden;
+}
+
+#sxr-dash-modal-canvas {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+
+#sxr-dash-modal-loading {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: rgba(255,255,255,0.3);
+	font-size: 13px;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	pointer-events: none;
+}

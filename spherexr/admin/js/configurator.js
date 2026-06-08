@@ -272,13 +272,20 @@
 
 	function renderOrbList() {
 		var list = document.getElementById('sxr-orb-list');
+		// Destroy sortable before rebuilding DOM
+		if (typeof jQuery !== 'undefined' && jQuery.fn.sortable) {
+			try { jQuery(list).sortable('destroy'); } catch (e) {}
+		}
 		list.innerHTML = '';
 		config.orbs.forEach(function (orb, idx) {
 			var li = document.createElement('li');
 			li.className = 'sxr-orb-item' + (idx === selectedOrbIdx ? ' is-selected' : '');
+			li.setAttribute('data-orb-id', orb.id);
 			li.innerHTML =
+				'<span class="sxr-drag-handle" title="Drag to reorder">&#8942;&#8942;</span>' +
 				'<span class="sxr-orb-swatch" style="background:' + orb.color + ';color:' + orb.color + '"></span>' +
 				'<span class="sxr-orb-label">Orb ' + (idx + 1) + ' <small>(' + orb.shape + ')</small></span>' +
+				'<span class="sxr-layer-badge" title="Layer (1 = renders on top)">' + (idx + 1) + '</span>' +
 				'<button class="sxr-orb-remove" title="Remove">&times;</button>';
 
 			li.addEventListener('click', function (e) {
@@ -286,14 +293,57 @@
 					config.orbs.splice(idx, 1);
 					if (selectedOrbIdx >= config.orbs.length) selectedOrbIdx = config.orbs.length - 1;
 					renderOrbList();
-					if (selectedOrbIdx >= 0) selectOrb(selectedOrbIdx);
+					if (selectedOrbIdx >= 0) {
+						selectOrb(selectedOrbIdx);
+					} else {
+						var fieldsEl = document.querySelector('.sxr-orb-fields');
+						var noSelEl  = document.querySelector('.sxr-no-selection');
+						if (fieldsEl) fieldsEl.style.display = 'none';
+						if (noSelEl)  noSelEl.style.display  = '';
+					}
 					refreshPreview();
 					return;
 				}
-				selectOrb(idx);
+				if (!e.target.classList.contains('sxr-drag-handle')) {
+					selectOrb(idx);
+				}
 			});
 
 			list.appendChild(li);
+		});
+		initSortable();
+	}
+
+	function initSortable() {
+		if (typeof jQuery === 'undefined' || !jQuery.fn.sortable) return;
+		var $list = jQuery('#sxr-orb-list');
+		$list.sortable({
+			handle: '.sxr-drag-handle',
+			axis: 'y',
+			tolerance: 'pointer',
+			update: function () {
+				var selectedId = selectedOrbIdx >= 0 && config.orbs[selectedOrbIdx]
+					? config.orbs[selectedOrbIdx].id
+					: null;
+
+				var newOrder = [];
+				$list.find('.sxr-orb-item').each(function () {
+					var orbId = jQuery(this).attr('data-orb-id');
+					var orb   = config.orbs.filter(function (o) { return o.id === orbId; })[0];
+					if (orb) newOrder.push(orb);
+				});
+				config.orbs = newOrder;
+
+				if (selectedId) {
+					selectedOrbIdx = -1;
+					for (var si = 0; si < config.orbs.length; si++) {
+						if (config.orbs[si].id === selectedId) { selectedOrbIdx = si; break; }
+					}
+				}
+
+				renderOrbList();
+				refreshPreview();
+			},
 		});
 	}
 
@@ -570,7 +620,9 @@
 		var safeMargin = ((config.global && config.global.safe_margin) || 0) / 100;
 		var t = state.time;
 
-		(config.orbs || []).forEach(function (orb) {
+		var _previewOrbs = config.orbs || [];
+		for (var _pi = _previewOrbs.length - 1; _pi >= 0; _pi--) {
+			var orb = _previewOrbs[_pi];
 			var bw = resolveSize(orb.size.w, orb.size.unit, w, h, 'x');
 			var bh = resolveSize(orb.size.h, orb.size.unit, w, h, 'y');
 			var baseX = resolveSize(orb.position.x, orb.position.unit, w, h, 'x');
@@ -628,7 +680,7 @@
 			}
 
 			previewCtx.restore();
-		});
+		}
 
 		previewRaf = requestAnimationFrame(tickPreview);
 	}

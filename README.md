@@ -1,169 +1,136 @@
-# SphereXR
+# SphereXR — Canvas Orb Animations for WordPress
 
-A powerful WordPress plugin for creating and managing canvas-based orb background animations with Elementor integration.
+A WordPress plugin for creating and managing canvas-based orb background animations. Attach to any element by CSS ID — works with Elementor, Gutenberg, Divi, or any theme.
 
-## Description
+## Features
 
-SphereXR enables you to create stunning, interactive canvas-based orb background animations that can be easily attached to any Elementor section using CSS IDs. Perfect for adding dynamic visual elements to your website without performance overhead.
+- **Visual Configurator** — 3-panel editor (orb list / live preview / settings) with real-time canvas rendering
+- **Drag-to-Reorder Layers** — drag orbs in the sidebar to control render order; top of list = visually on top
+- **Layer Badges** — each orb shows its layer number so stacking is always visible
+- **6 Animation Types** — Drift (compound harmonic), Orbit, Pulse, Wave, Fixed, Figure-8 (Lissajous)
+- **Interactivity** — Parallax, Repel, Attract, Follow cursor
+- **4 Shapes** — Circle, Double, Triple, Blob (with organic deformation)
+- **6 Blend Modes** — Screen, Normal, Multiply, Overlay, Lighten, Hard-Light
+- **REST API** — full CRUD + duplicate/toggle endpoints
+- **Consistent Admin UI** — shared header, card components, and CSS variables across all pages
+- **Performance** — IntersectionObserver pause when off-screen, DPR cap for HiDPI, `prefers-reduced-motion` support
+- **WordPress Ready** — GPL-2.0-or-later, requires WP 6.0+ and PHP 7.4+
 
-### Features
+## Requirements
 
-- **Canvas-Based Animations**: Lightweight, GPU-accelerated orb animations
-- **Elementor Integration**: Seamlessly attach animations to any Elementor section by CSS ID
-- **Animation Manager**: Create, edit, and manage multiple animations
-- **Visual Configurator**: Intuitive interface to customize animation properties
-- **REST API**: Full REST API support for programmatic animation management
-- **Custom Post Type**: Dedicated post type for storing animation configurations
-- **Debug Tools**: Built-in debugging interface for troubleshooting
-- **Internationalization**: Full multilingual support (i18n)
-- **Settings Panel**: Centralized settings management
-- **Performance Optimized**: Minimal footprint with efficient asset loading
+- WordPress 6.0+
+- PHP 7.4+
+- Elementor (optional — any CSS ID works)
 
 ## Installation
 
-1. Download the plugin from the [GitHub repository](https://github.com/ExpoXR/SphareXR)
-2. Upload the `spherexr` folder to `/wp-content/plugins/`
-3. Activate the plugin through the WordPress admin panel
-4. Navigate to **SphereXR** in the WordPress admin menu to start creating animations
+1. Clone or download this repository
+2. Copy the `spherexr/` folder into `wp-content/plugins/`
+3. Activate **SphereXR** in the WordPress admin
+4. Go to **SphereXR > New Animation** to create your first animation
 
-## Usage
+## Quick Start
 
-### Creating an Animation
-
-1. Go to **SphereXR > New Animation**
-2. Use the visual configurator to set up your animation
-3. Configure animation properties (colors, speed, size, etc.)
-4. Save the animation
-
-### Attaching to Elementor Sections
-
-1. Add the CSS ID to your Elementor section (e.g., `sphere-background`)
-2. The animation will automatically render as the background
-3. Multiple animations can be attached to different sections
-
-### REST API
-
-The plugin provides REST API endpoints for animation management:
-
-- `GET /wp-json/spherexr/v1/animations` - Get all animations
-- `POST /wp-json/spherexr/v1/animations` - Create new animation
-- `GET /wp-json/spherexr/v1/animations/{id}` - Get specific animation
-- `PUT /wp-json/spherexr/v1/animations/{id}` - Update animation
-- `DELETE /wp-json/spherexr/v1/animations/{id}` - Delete animation
+1. Create an animation at **SphereXR > New Animation**
+2. Add orbs, set colors, choose animation type
+3. Note the **Animation ID** (e.g., `hero-bg`)
+4. Add that as a CSS ID on any element in Elementor (Advanced → CSS ID) or in code: `<div id="hero-bg">`
+5. The canvas animation renders automatically behind your content
 
 ## Project Structure
 
 ```
-spherexr/
-├── spherexr.php                 # Main plugin file
-├── uninstall.php                # Plugin uninstall handler
-├── admin/                        # Admin interface
-│   ├── class-spherexr-admin.php
-│   ├── class-spherexr-dashboard.php
-│   ├── class-spherexr-configurator.php
-│   ├── class-spherexr-settings.php
-│   ├── class-spherexr-debug.php
+spherexr/                        ← WordPress plugin root
+├── spherexr.php                 ← entry point (constants, activation hooks)
+├── uninstall.php                ← cleanup on uninstall
+├── readme.txt                   ← WordPress Plugin Directory readme
+├── admin/
+│   ├── class-spherexr-admin.php         ← menu + asset enqueuing
+│   ├── class-spherexr-dashboard.php     ← animation list + render_header() helper
+│   ├── class-spherexr-configurator.php  ← editor page controller
+│   ├── class-spherexr-settings.php      ← WP Settings API
+│   ├── class-spherexr-debug.php         ← debug/diagnostics page
 │   ├── css/
-│   │   ├── admin.css
-│   │   └── configurator.css
+│   │   ├── admin.css            ← shared admin styles + CSS variables
+│   │   └── configurator.css     ← editor-specific styles
 │   └── js/
-│       ├── admin.js
-│       └── configurator.js
-├── includes/                    # Core functionality
-│   ├── class-spherexr-loader.php
-│   ├── class-spherexr-activator.php
-│   ├── class-spherexr-deactivator.php
-│   ├── class-spherexr-i18n.php
-│   ├── class-spherexr-cpt.php
-│   ├── class-spherexr-public.php
-│   └── class-spherexr-rest.php
-├── public/                      # Frontend assets
-│   ├── css/
-│   │   └── spherexr.css
+│       ├── admin.js             ← dashboard interactions + preview modal
+│       └── configurator.js      ← editor logic, sortable layers, live preview
+├── includes/
+│   ├── class-spherexr-loader.php        ← bootstraps all hooks
+│   ├── class-spherexr-activator.php     ← activation handler
+│   ├── class-spherexr-deactivator.php   ← deactivation handler
+│   ├── class-spherexr-i18n.php          ← text domain loading
+│   ├── class-spherexr-cpt.php           ← CPT registration + sanitize_config()
+│   ├── class-spherexr-public.php        ← config JSON injection + detect script
+│   └── class-spherexr-rest.php          ← REST API endpoints
+├── public/
+│   ├── css/spherexr.css         ← canvas container styles
 │   └── js/
-│       ├── spherexr-detect.js
-│       └── spherexr-engine.js
-├── templates/                   # Template files
-│   └── admin/
-│       ├── configurator.php
-│       ├── dashboard.php
-│       ├── debug.php
-│       └── settings.php
-└── languages/                   # Translation files
-
+│       ├── spherexr-detect.js   ← scans DOM, injects engine when animations found
+│       └── spherexr-engine.js   ← requestAnimationFrame canvas renderer
+├── templates/admin/
+│   ├── dashboard.php
+│   ├── configurator.php
+│   ├── settings.php
+│   └── debug.php
+└── languages/                   ← i18n (.pot files)
 ```
 
-## Core Components
+## REST API
 
-### Admin Classes
+Base URL: `/wp-json/spherexr/v1`  
+Authentication: WordPress cookie auth + `X-WP-Nonce` header  
+Required capability: `edit_posts`
 
-- **SphereXR_Admin**: Manages admin menu pages and asset enqueuing
-- **SphereXR_Dashboard**: Main dashboard for viewing all animations
-- **SphereXR_Configurator**: Visual animation editor
-- **SphereXR_Settings**: Plugin settings management
-- **SphereXR_Debug**: Debugging interface
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/animations` | List all animations |
+| POST | `/animations` | Create animation |
+| GET | `/animations/{id}` | Get single animation |
+| PUT | `/animations/{id}` | Update animation |
+| DELETE | `/animations/{id}` | Delete animation |
+| POST | `/animations/{id}/duplicate` | Clone animation |
+| POST | `/animations/{id}/toggle` | Toggle active state |
 
-### Includes Classes
+## Layer Ordering
 
-- **SphereXR_Loader**: Main plugin loader and hook orchestrator
-- **SphereXR_Activator**: Plugin activation handling
-- **SphereXR_Deactivator**: Plugin deactivation handling
-- **SphereXR_i18n**: Internationalization support
-- **SphereXR_CPT**: Custom Post Type registration
-- **SphereXR_Public**: Frontend functionality
-- **SphereXR_REST**: REST API endpoints
+Orbs are rendered on a single HTML5 canvas. Render order determines stacking:
 
-### Public Assets
+- **Top of list** → drawn last → visually on top
+- **Bottom of list** → drawn first → visually behind all others
+- Drag orbs in the configurator sidebar to reorder
+- Layer badge (number) on each row shows current stacking order
 
-- **spherexr-detect.js**: Detects animation containers on page
-- **spherexr-engine.js**: Renders canvas animations
-- **spherexr.css**: Frontend styling
+## For Contributors
 
-## Requirements
+See [CLAUDE.md](CLAUDE.md) for Claude Code context and [AGENTS.md](AGENTS.md) for AI agent context including architecture decisions and constraint documentation.
 
-- WordPress 5.0+
-- Elementor (optional, for easier integration)
-- PHP 7.4+
+**WordPress coding standards apply.** All PHP sanitization goes through `SphereXR_CPT::sanitize_config()`. New orb properties must be added there before adding them anywhere else.
 
-## Development
-
-### Getting Started
-
-1. Clone the repository
-2. Navigate to the plugin directory
-3. Make your changes
-4. Test in a WordPress installation with Elementor
-
-### Code Standards
-
-The plugin follows WordPress coding standards:
-- PHP code follows [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/)
-- JavaScript uses standard WordPress practices
-- CSS is modular and prefixed with `spherexr-`
-
-## License
-
-This project is licensed under the GPL-2.0+ License. See [LICENSE](https://www.gnu.org/licenses/gpl-2.0.txt) for details.
-
-## Author
-
-**Ayal Othman**  
-Website: [https://expoxr.com](https://expoxr.com)
-
-## Support
-
-For issues, feature requests, or questions, please visit the [GitHub Issues](https://github.com/ExpoXR/SphareXR/issues) page.
+**Three render engines must stay in sync:**
+- `public/js/spherexr-engine.js` (frontend)
+- `admin/js/configurator.js` (editor preview)
+- `admin/js/admin.js` (dashboard modal preview)
 
 ## Changelog
 
-### Version 1.0.0
+### 1.0.0
+
 - Initial release
-- Canvas-based orb animations
-- Elementor integration
-- Admin dashboard and configurator
-- REST API support
-- Internationalization support
+- Canvas orb animations with 6 types and 4 shapes
+- 3-panel visual configurator with live preview
+- Drag-to-reorder layers with layer number badges
+- Cursor interactivity (Parallax, Repel, Attract, Follow)
+- REST API for full programmatic control
+- Consistent admin UI across Dashboard, Settings, Debug, and Configurator
+- Performance optimizations: off-screen pause, DPR cap, reduced-motion support
+- WordPress 6.0+ / PHP 7.4+ compatibility headers
 
----
+## License
 
-**SphereXR** - Bringing dynamic canvas animations to WordPress.
+GPL-2.0-or-later — see [https://www.gnu.org/licenses/gpl-2.0.html](https://www.gnu.org/licenses/gpl-2.0.html)
+
+## Author
+
+**Ayal Othman** — [expoxr.com](https://expoxr.com)

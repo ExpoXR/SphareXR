@@ -89,7 +89,8 @@ class SphereXR_CPT {
 			'orbs' => array(),
 		);
 
-		foreach ( (array) ( $raw['orbs'] ?? array() ) as $orb ) {
+		$raw_orbs = array_slice( (array) ( $raw['orbs'] ?? array() ), 0, 20 );
+		foreach ( $raw_orbs as $orb ) {
 			$anim = $orb['animation'] ?? array();
 			$size = $orb['size'] ?? array();
 			$pos  = $orb['position'] ?? array();

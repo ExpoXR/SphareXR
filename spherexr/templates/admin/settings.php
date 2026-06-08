@@ -1,20 +1,23 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
 <div class="wrap spherexr-wrap">
 
-	<div class="spherexr-header">
-		<h1><?php esc_html_e( 'SphereXR Settings', 'spherexr' ); ?></h1>
-	</div>
+	<?php
+	SphereXR_Dashboard::render_header(
+		__( 'Settings', 'spherexr' )
+	);
+	?>
 
 	<?php settings_errors( 'spherexr_settings_group' ); ?>
 
-	<form method="post" action="options.php">
-		<?php settings_fields( 'spherexr_settings_group' ); ?>
-		<?php do_settings_sections( 'spherexr-settings' ); ?>
-		<?php submit_button(); ?>
-	</form>
+	<div class="sxr-page-card">
+		<form method="post" action="options.php" class="spherexr-settings-form">
+			<?php settings_fields( 'spherexr_settings_group' ); ?>
+			<?php do_settings_sections( 'spherexr-settings' ); ?>
+			<?php submit_button( __( 'Save Settings', 'spherexr' ) ); ?>
+		</form>
+	</div>
 
-	<hr>
-	<p class="description">
+	<p class="spherexr-settings-footer">
 		<?php printf(
 			/* translators: %s: plugin version */
 			esc_html__( 'SphereXR v%s — Built by Ayal Othman / ExpoXR', 'spherexr' ),

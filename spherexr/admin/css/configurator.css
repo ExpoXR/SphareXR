@@ -435,3 +435,59 @@
 .wp-picker-container .wp-color-result {
 	border-radius: 4px !important;
 }
+
+/* ---- Drag handle ---- */
+.sxr-drag-handle {
+	cursor: grab;
+	color: var(--sxr-text-muted);
+	font-size: 14px;
+	line-height: 1;
+	opacity: 0.4;
+	flex-shrink: 0;
+	padding: 0 2px;
+	user-select: none;
+}
+
+.sxr-orb-item:hover .sxr-drag-handle { opacity: 0.75; }
+.sxr-drag-handle:active { cursor: grabbing; }
+
+/* ---- Layer badge ---- */
+.sxr-layer-badge {
+	font-size: 10px;
+	font-weight: 600;
+	color: var(--sxr-accent);
+	background: var(--sxr-accent-muted);
+	border: 1px solid rgba(34, 113, 177, 0.2);
+	border-radius: 10px;
+	padding: 1px 6px;
+	flex-shrink: 0;
+	min-width: 22px;
+	text-align: center;
+}
+
+/* ---- Sortable drag states ---- */
+.sxr-orb-item.ui-sortable-helper {
+	background: var(--sxr-surface) !important;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	border-left-color: var(--sxr-accent) !important;
+	border-radius: 4px;
+	list-style: none;
+	opacity: 0.95;
+}
+
+.sxr-orb-item.ui-sortable-placeholder {
+	background: var(--sxr-accent-muted) !important;
+	border-left-color: var(--sxr-accent) !important;
+	visibility: visible !important;
+	border-radius: 0;
+}
+
+/* ---- Orb list top hint ---- */
+.sxr-orb-list-hint {
+	font-size: 10px;
+	color: var(--sxr-text-muted);
+	padding: 2px 12px 8px;
+	font-style: italic;
+	margin: 0;
+	border-bottom: 1px solid var(--sxr-border);
+}

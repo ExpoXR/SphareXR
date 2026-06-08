@@ -281,7 +281,9 @@
 
 			ctx.globalCompositeOperation = blendMode;
 
-			(config.orbs || []).forEach(function (orb) {
+			var _modalOrbs = config.orbs || [];
+			for (var _mi = _modalOrbs.length - 1; _mi >= 0; _mi--) {
+				var orb    = _modalOrbs[_mi];
 				var bw     = _resolveSize(orb.size.w, orb.size.unit, w, h, 'x');
 				var bh     = _resolveSize(orb.size.h, orb.size.unit, w, h, 'y');
 				var baseX  = _resolveSize(orb.position.x, orb.position.unit, w, h, 'x');
@@ -336,7 +338,7 @@
 				}
 
 				ctx.restore();
-			});
+			}
 
 			ctx.globalCompositeOperation = 'source-over';
 			_modalRaf = requestAnimationFrame(tick);

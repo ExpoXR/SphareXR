@@ -3,6 +3,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class SphereXR_Dashboard {
 
+	/**
+	 * Shared admin page header — breadcrumb style for subpages.
+	 *
+	 * @param string $page_title Current page name (e.g. "Settings").
+	 * @param string $actions_html Optional escaped HTML for right-side actions.
+	 */
+	public static function render_header( $page_title, $actions_html = '' ) {
+		?>
+		<div class="spherexr-header">
+			<h1 class="spherexr-logo">
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=spherexr' ) ); ?>">SphereXR</a>
+			</h1>
+			<span class="spherexr-header-sep">›</span>
+			<span class="spherexr-page-title"><?php echo esc_html( $page_title ); ?></span>
+			<?php if ( $actions_html ) : ?>
+				<div class="spherexr-header-actions"><?php echo $actions_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
+			<?php endif; ?>
+		</div>
+		<?php
+	}
+
 	public function render() {
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			wp_die( esc_html__( 'You do not have permission to access this page.', 'spherexr' ) );

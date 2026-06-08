@@ -262,8 +262,10 @@
 
 			ctx.globalCompositeOperation = blendMode;
 
-			(cfg.orbs || []).forEach(function (orb, idx) {
-				var seed  = orbSeeds[idx] || 0;
+			var _orbsArr = cfg.orbs || [];
+			for (var _oi = _orbsArr.length - 1; _oi >= 0; _oi--) {
+				var orb   = _orbsArr[_oi];
+				var seed  = orbSeeds[_oi] || 0;
 				var scale = computeOrbScale(orb, t);
 
 				var pos = computeOrbPos(
@@ -296,7 +298,7 @@
 				}
 
 				ctx.restore();
-			});
+			}
 
 			// Reset composite
 			ctx.globalCompositeOperation = 'source-over';

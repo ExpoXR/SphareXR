@@ -1,16 +1,17 @@
 /* SphereXR — Admin Base Styles (light WordPress admin theme) */
 
 :root {
-	--sxr-accent:     #2271b1;
-	--sxr-accent-h:   #135e96;
-	--sxr-surface:    #ffffff;
-	--sxr-surface-2:  #f6f7f7;
-	--sxr-border:     #dcdcde;
-	--sxr-text:       #1d2327;
-	--sxr-text-muted: #646970;
-	--sxr-active:     #00a32a;
-	--sxr-inactive:   #8c8f94;
-	--sxr-danger:     #d63638;
+	--sxr-accent:        #2271b1;
+	--sxr-accent-h:      #135e96;
+	--sxr-accent-muted:  rgba(34, 113, 177, 0.10);
+	--sxr-surface:       #ffffff;
+	--sxr-surface-2:     #f6f7f7;
+	--sxr-border:        #dcdcde;
+	--sxr-text:          #1d2327;
+	--sxr-text-muted:    #646970;
+	--sxr-active:        #00a32a;
+	--sxr-inactive:      #8c8f94;
+	--sxr-danger:        #d63638;
 }
 
 /* ---- Wrapper ---- */
@@ -23,7 +24,7 @@
 .spherexr-header {
 	display: flex;
 	align-items: center;
-	gap: 16px;
+	gap: 12px;
 	padding: 20px 0 16px;
 	border-bottom: 1px solid var(--sxr-border);
 	margin-bottom: 24px;
@@ -32,10 +33,39 @@
 
 .spherexr-logo {
 	margin: 0;
-	font-size: 22px;
+	font-size: 20px;
 	font-weight: 700;
 	letter-spacing: -0.5px;
 	color: var(--sxr-accent);
+	white-space: nowrap;
+}
+
+.spherexr-logo a {
+	color: var(--sxr-accent);
+	text-decoration: none;
+}
+
+.spherexr-logo a:hover { color: var(--sxr-accent-h); }
+
+.spherexr-header-sep {
+	color: var(--sxr-text-muted);
+	font-size: 18px;
+	font-weight: 300;
+	line-height: 1;
+}
+
+.spherexr-page-title {
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--sxr-text);
+	flex: 1;
+}
+
+.spherexr-header-actions {
+	margin-left: auto;
+	display: flex;
+	gap: 8px;
+	align-items: center;
 }
 
 .spherexr-tagline {
@@ -47,6 +77,80 @@
 
 .spherexr-btn-new {
 	margin-left: auto;
+}
+
+/* ---- Page card ---- */
+.sxr-page-card {
+	background: var(--sxr-surface);
+	border: 1px solid var(--sxr-border);
+	border-radius: 4px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+	padding: 20px 24px;
+	margin-bottom: 20px;
+}
+
+/* ---- Section title ---- */
+.sxr-section-title {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--sxr-text);
+	margin: 0 0 16px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid var(--sxr-border);
+}
+
+/* ---- Settings form overrides ---- */
+.spherexr-settings-form {
+	max-width: 800px;
+}
+
+.spherexr-settings-form h2 {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--sxr-text);
+	padding: 20px 0 8px;
+	margin: 0 0 4px;
+	border-bottom: 1px solid var(--sxr-border);
+}
+
+.spherexr-settings-form .form-table {
+	margin-top: 0;
+	border-bottom: 1px solid var(--sxr-surface-2);
+	margin-bottom: 8px;
+}
+
+.spherexr-settings-form .form-table th {
+	font-size: 13px;
+	font-weight: 500;
+	padding: 12px 16px 12px 0;
+	color: var(--sxr-text);
+}
+
+.spherexr-settings-form .form-table td {
+	padding: 12px 0;
+}
+
+.spherexr-settings-form .form-table input[type="number"],
+.spherexr-settings-form .form-table input[type="text"],
+.spherexr-settings-form .form-table select {
+	border-radius: 4px;
+	border: 1px solid var(--sxr-border);
+	padding: 5px 8px;
+	font-size: 13px;
+}
+
+.spherexr-settings-form .form-table input[type="number"]:focus,
+.spherexr-settings-form .form-table input[type="text"]:focus,
+.spherexr-settings-form .form-table select:focus {
+	outline: 2px solid var(--sxr-accent);
+	outline-offset: 1px;
+	border-color: var(--sxr-accent);
+}
+
+.spherexr-settings-footer {
+	margin-top: 8px;
+	font-size: 12px;
+	color: var(--sxr-text-muted);
 }
 
 /* ---- Empty state ---- */

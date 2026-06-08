@@ -119,6 +119,7 @@
 					<h3><?php esc_html_e( 'Orbs', 'spherexr' ); ?></h3>
 					<button id="sxr-add-orb-btn" class="button button-small">+ <?php esc_html_e( 'Add Orb', 'spherexr' ); ?></button>
 				</div>
+				<p class="sxr-orb-list-hint"><?php esc_html_e( 'Top = above others · drag to reorder', 'spherexr' ); ?></p>
 				<ul id="sxr-orb-list" class="sxr-orb-list">
 					<!-- Populated by JS -->
 				</ul>

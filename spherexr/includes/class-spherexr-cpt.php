@@ -78,6 +78,9 @@ class SphereXR_CPT {
 				'safe_margin' => self::clamp_int( $global['safe_margin'] ?? 5, 0, 30 ),
 				'blend_mode'  => in_array( $global['blend_mode'] ?? 'screen', $allowed_blend, true )
 				                 ? $global['blend_mode'] : 'screen',
+				'preview_bg'  => self::sanitize_preview_bg( $global['preview_bg'] ?? 'transparent' ),
+				'preview_w'   => self::sanitize_preview_dim( $global['preview_w'] ?? null, 3000 ),
+				'preview_h'   => self::sanitize_preview_dim( $global['preview_h'] ?? null, 2000 ),
 				'interactivity' => array(
 					'enabled'  => ! empty( $interactivity['enabled'] ),
 					'mode'     => in_array( $interactivity['mode'] ?? 'parallax', $allowed_modes, true )
@@ -133,6 +136,30 @@ class SphereXR_CPT {
 		}
 
 		return $config;
+	}
+
+	/**
+	 * Editor preview background: 'transparent', a hex color, or a safe
+	 * rgb()/rgba() string. Anything else falls back to 'transparent'.
+	 */
+	private static function sanitize_preview_bg( $val ) {
+		$val = is_string( $val ) ? trim( $val ) : '';
+		if ( '' === $val || 'transparent' === $val ) return 'transparent';
+		$hex = sanitize_hex_color( $val );
+		if ( $hex ) return $hex;
+		if ( preg_match( '/^rgba?\(\s*[\d.]+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*(,\s*[\d.]+\s*)?\)$/i', $val ) ) {
+			return $val;
+		}
+		return 'transparent';
+	}
+
+	/**
+	 * Editor preview size: null (auto/fill — the editor also sends 0 for
+	 * "fill") or a clamped pixel value.
+	 */
+	private static function sanitize_preview_dim( $val, $max ) {
+		if ( null === $val || '' === $val || ! (int) $val ) return null;
+		return self::clamp_int( $val, 100, $max );
 	}
 
 	private static function clamp_float( $val, $min, $max ) {

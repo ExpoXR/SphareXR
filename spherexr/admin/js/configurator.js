@@ -178,6 +178,13 @@
 
 	var interMode = document.getElementById('sxr-interact-mode');
 	if (interMode) {
+		// Sync mode from rendered select on load (handles old configs without saved mode)
+		config.global = config.global || {};
+		config.global.interactivity = config.global.interactivity || {};
+		if (!config.global.interactivity.mode) {
+			config.global.interactivity.mode = interMode.value;
+		}
+
 		interMode.addEventListener('change', function () {
 			config.global.interactivity = config.global.interactivity || {};
 			config.global.interactivity.mode = interMode.value;

@@ -122,7 +122,8 @@ class SphereXR_CPT {
 					'frequency_y' => self::clamp_float( $anim['frequency_y'] ?? 0.5, 0.05, 5.0 ),
 					'phase'       => self::clamp_float( $anim['phase'] ?? 0.0, 0.0, 6.2832 ),
 				),
-				'parallax' => self::clamp_float( $orb['parallax'] ?? 0.5, 0.0, 1.0 ),
+				'parallax'  => self::clamp_float( $orb['parallax'] ?? 0.5, 0.0, 1.0 ),
+				'rotation'  => self::clamp_float( $orb['rotation'] ?? 0.0, 0.0, 360.0 ),
 			);
 
 			$config['orbs'][] = $sanitized_orb;

@@ -100,7 +100,7 @@
 				<!-- Interaction pane -->
 				<div class="sxr-global-pane" data-gpane="interaction" role="tabpanel">
 					<label class="sxr-interactivity-toggle">
-						<input type="checkbox" id="sxr-interactivity-enabled" <?php checked( ! empty( $config['global']['interactivity']['enabled'] ) ); ?>>
+						<input type="checkbox" id="sxr-interactivity-enabled" <?php checked( $is_new || ! empty( $config['global']['interactivity']['enabled'] ) ); ?>>
 						<?php esc_html_e( 'Enable Interactivity', 'spherexr' ); ?>
 					</label>
 
@@ -270,6 +270,14 @@
 									<input type="range" id="sxr-orb-h" min="1" max="200" step="1" value="40">
 									<input type="number" class="sxr-num" id="sxr-orb-h-num" min="1" max="200" step="1" value="40">
 									<span class="sxr-unit-label">%</span>
+								</div>
+							</div>
+							<div class="sxr-field">
+								<label><?php esc_html_e( 'Rotation (°)', 'spherexr' ); ?></label>
+								<div class="sxr-slider-row">
+									<input type="range" id="sxr-orb-rotation" min="0" max="360" step="1" value="0">
+									<input type="number" class="sxr-num" id="sxr-orb-rotation-num" min="0" max="360" step="1" value="0">
+									<span>°</span>
 								</div>
 							</div>
 

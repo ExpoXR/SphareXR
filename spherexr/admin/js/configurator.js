@@ -161,6 +161,11 @@
 	var interEnabled = document.getElementById('sxr-interactivity-enabled');
 	var interFields  = document.getElementById('sxr-interactivity-fields');
 	if (interEnabled && interFields) {
+		// Sync enabled state from PHP-rendered checkbox into in-memory config on load
+		config.global = config.global || {};
+		config.global.interactivity = config.global.interactivity || {};
+		config.global.interactivity.enabled = interEnabled.checked;
+
 		interEnabled.addEventListener('change', function () {
 			config.global = config.global || {};
 			config.global.interactivity = config.global.interactivity || {};
@@ -173,6 +178,13 @@
 
 	var interMode = document.getElementById('sxr-interact-mode');
 	if (interMode) {
+		// Sync mode from rendered select on load (handles old configs without saved mode)
+		config.global = config.global || {};
+		config.global.interactivity = config.global.interactivity || {};
+		if (!config.global.interactivity.mode) {
+			config.global.interactivity.mode = interMode.value;
+		}
+
 		interMode.addEventListener('change', function () {
 			config.global.interactivity = config.global.interactivity || {};
 			config.global.interactivity.mode = interMode.value;
@@ -338,6 +350,7 @@
 			opacity: 0.8,
 			animation: { type: 'drift', amplitude_x: 5, amplitude_y: 5, frequency_x: 0.4, frequency_y: 0.5, phase: 0 },
 			parallax: 0.5,
+			rotation: 0,
 		};
 	}
 
@@ -511,6 +524,9 @@
 
 		// Interaction
 		setValue('sxr-orb-parallax', 'sxr-orb-parallax-num', orb.parallax);
+
+		// Rotation
+		setValue('sxr-orb-rotation', 'sxr-orb-rotation-num', orb.rotation || 0);
 	}
 
 	function setValue(sliderId, numId, val) {
@@ -585,6 +601,7 @@
 	bindOrbField('sxr-orb-freq-y', 'sxr-orb-freq-y-num', 'animation.frequency_y', false);
 	bindOrbField('sxr-orb-phase', 'sxr-orb-phase-num', 'animation.phase', false);
 	bindOrbField('sxr-orb-parallax', 'sxr-orb-parallax-num', 'parallax', false);
+	bindOrbField('sxr-orb-rotation', 'sxr-orb-rotation-num', 'rotation', false);
 
 	// Shape radios
 	document.querySelectorAll('[name="sxr-orb-shape"]').forEach(function (radio) {
@@ -773,7 +790,7 @@
 
 		// Interactivity — mirrors spherexr-engine.js draw()
 		var inter    = (config.global && config.global.interactivity) || {};
-		var iEnabled = inter.enabled && inter.mode !== 'none';
+		var iEnabled = (inter.enabled !== false) && inter.mode !== 'none';
 		var iMode    = iEnabled ? inter.mode : 'none';
 		var iStr     = inter.strength || 0.5;
 		var iRad     = inter.radius || 30;

@@ -183,6 +183,13 @@
 		ctx.filter = blurFilter(orb);
 		ctx.globalAlpha = clamp(orb.opacity, 0, 1);
 
+		var rotRad = ((orb.rotation || 0) * Math.PI) / 180;
+		if (rotRad) {
+			ctx.translate(x, y);
+			ctx.rotate(rotRad);
+			ctx.translate(-x, -y);
+		}
+
 		switch (orb.shape) {
 			case 'double':
 				drawBlob(ctx, x - rx * 0.25, y, rx * 0.85, ry * 0.85, orb.color, 1, 0.12);

@@ -125,7 +125,7 @@
 			var blendMode  = g.blend_mode || 'screen';
 			var safeMargin = g.safe_margin || 0;
 			var interact   = g.interactivity || {};
-			var iEnabled   = interact.enabled && interact.mode !== 'none';
+			var iEnabled   = (interact.enabled !== false) && interact.mode !== 'none';
 			var iMode      = iEnabled ? interact.mode : 'none';
 			var iStrength  = interact.strength || 0.5;
 			var iRadius    = interact.radius   || 30;

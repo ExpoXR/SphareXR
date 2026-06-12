@@ -727,7 +727,12 @@
 	var ptr = { mx: 0, my: 0, tx: 0, ty: 0, hover: 0, targetHover: 0, lastPX: -1, lastPY: -1 };
 
 	if (previewCanvas) {
-		previewCanvas.addEventListener('pointerenter', function () {
+		previewCanvas.addEventListener('pointerenter', function (e) {
+			var rect = previewCanvas.getBoundingClientRect();
+			if (rect.width && rect.height) {
+				ptr.tx = (e.clientX - rect.left) / rect.width  - 0.5;
+				ptr.ty = (e.clientY - rect.top)  / rect.height - 0.5;
+			}
 			ptr.targetHover = 0.72;
 		}, { passive: true });
 

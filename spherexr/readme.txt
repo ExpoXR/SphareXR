@@ -4,7 +4,7 @@ Tags: animation, canvas, background, orbs, elementor
 Requires at least: 6.0
 Tested up to: 7.0
 Stable tag: 1.1.0
-Requires PHP: 8.1
+Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,7 +20,7 @@ SphereXR lets you build and manage animated orb backgrounds directly from the Wo
 * **Drag-to-reorder layers** — drag orbs in the sidebar to control which orb renders on top
 * **Layer badges** — each orb shows its layer number (1 = topmost)
 * **6 animation types** — Drift, Orbit, Pulse, Wave, Fixed, Figure-8 (Lissajous)
-* **Interactivity modes** — Parallax, Repel, Attract, Follow cursor
+* **Interactivity modes** — Parallax, Repel, Attract
 * **4 shapes** — Circle, Double, Triple, Blob (with organic deformation)
 * **Blend modes** — Screen, Normal, Multiply, Overlay, Lighten, Hard-Light
 * **REST API** — full programmatic control over animations

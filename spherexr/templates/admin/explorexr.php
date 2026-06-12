@@ -66,6 +66,7 @@
 	</p>
 
 	<?php
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 	$sxr_addons = array(
 		array(
 			'title'    => __( 'Morphing Add-On', 'spherexr' ),
@@ -206,11 +207,11 @@
 		<p class="sxr-xr-demos-intro"><?php esc_html_e( 'Explore everything the ExploreXR family can do. Each add-on has a live demo on expoxr.com.', 'spherexr' ); ?></p>
 
 		<div class="sxr-xr-demos">
-			<?php foreach ( $sxr_addons as $addon ) : ?>
+			<?php foreach ( $sxr_addons as $addon ) : // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>
 				<div class="sxr-page-card sxr-xr-demo-card">
 					<h3><?php echo esc_html( $addon['title'] ); ?></h3>
 					<ul>
-						<?php foreach ( $addon['features'] as $feature ) : ?>
+						<?php foreach ( $addon['features'] as $feature ) : // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>
 							<li><?php echo esc_html( $feature ); ?></li>
 						<?php endforeach; ?>
 					</ul>

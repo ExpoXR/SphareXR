@@ -29,7 +29,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ( $animations as $anim ) : ?>
+				<?php foreach ( $animations as $anim ) : // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>
 					<tr data-post-id="<?php echo esc_attr( $anim['post']->ID ); ?>">
 						<td>
 							<strong>

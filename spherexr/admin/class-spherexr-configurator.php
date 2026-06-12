@@ -8,6 +8,7 @@ class SphereXR_Configurator {
 			wp_die( esc_html__( 'You do not have permission to access this page.', 'spherexr' ) );
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only display param, absint sanitizes.
 		$post_id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
 		$post    = $post_id ? get_post( $post_id ) : null;
 		$is_new  = ! $post || $post->post_type !== 'spherexr_animation';

@@ -8,7 +8,9 @@
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $sxr_settings   = get_option( 'spherexr_settings', array() );
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $sxr_show_debug = ! empty( $sxr_settings['debug_mode'] ) && current_user_can( 'manage_options' );
 ?>
 <div class="spherexr-admin-header">

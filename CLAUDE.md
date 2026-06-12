@@ -6,6 +6,8 @@ WordPress plugin for canvas-based orb background animations. Animations attach t
 
 **Plugin folder:** `spherexr/` (install this into `wp-content/plugins/`)
 
+**Agent communication:** Caveman skill is available in `.claude/skills/caveman/`. Use terse exact technical communication when active, but keep security warnings, irreversible-action confirmations, and release instructions fully clear.
+
 ## Architecture
 
 ### Data Flow
@@ -139,9 +141,29 @@ No automated test suite. Manual verification steps:
 5. **Settings save** — change DPR cap, save, reload settings page, verify value persists.
 6. **REST API** — use `wp-json/spherexr/v1/animations` to verify endpoints respond correctly.
 
+
+
 ## Do Not
 
 - Do not remove `--sxr-accent-muted` from `:root` — it's used by layer badges in configurator.css
 - Do not change draw loop direction in engine.js — reversal is intentional for layer ordering
 - Do not use `$raw['orbs']` directly in sanitize_config without the `array_slice` cap
 - Do not add inline styles to admin templates — use CSS classes and existing variables
+
+---
+
+## Skills Reference
+
+Caveman skill is available for terse AI communication:
+
+```
+/caveman        — activate full caveman mode
+/caveman lite   — no filler, keep full sentences
+/caveman ultra  — maximum abbreviation
+stop caveman    — return to normal mode
+```
+
+Location: `.claude/skills/caveman/`
+
+Caveman mode stays active across responses. Disable with "stop caveman" or "normal mode".
+

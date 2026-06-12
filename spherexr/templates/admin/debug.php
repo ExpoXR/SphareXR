@@ -46,12 +46,13 @@
 		<?php if ( empty( $animations ) ) : ?>
 			<p><?php esc_html_e( 'No animations registered.', 'spherexr' ); ?></p>
 		<?php else : ?>
-			<?php foreach ( $animations as $anim ) : ?>
+			<?php foreach ( $animations as $anim ) : // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>
 				<div class="spherexr-debug-anim-block <?php echo $anim['active'] ? 'is-active' : 'is-inactive'; ?>">
 					<div class="spherexr-debug-anim-header">
 						<strong><?php echo esc_html( $anim['title'] ); ?></strong>
 						<code>#<?php echo esc_html( $anim['anim_id'] ); ?></code>
 						<span class="spherexr-status-badge"><?php echo $anim['active'] ? esc_html__( 'Active', 'spherexr' ) : esc_html__( 'Inactive', 'spherexr' ); ?></span>
+						<?php /* translators: %d: number of orbs */ ?>
 						<span><?php echo esc_html( sprintf( _n( '%d orb', '%d orbs', $anim['orb_count'], 'spherexr' ), $anim['orb_count'] ) ); ?></span>
 						<button class="button button-small spherexr-debug-toggle-json" data-target="json-<?php echo esc_attr( $anim['id'] ); ?>">
 							<?php esc_html_e( 'Show Config', 'spherexr' ); ?>

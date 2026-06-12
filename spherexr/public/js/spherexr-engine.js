@@ -149,7 +149,10 @@
 		/* ---- Pointer events (passive, from sm-effects.js pattern) ---- */
 		var lastPX = -1, lastPY = -1;
 
-		function onPointerEnter() {
+		function onPointerEnter(e) {
+			var rect = state.rect || (state.rect = el.getBoundingClientRect());
+			state.targetX = (e.clientX - rect.left) / rect.width  - 0.5;
+			state.targetY = (e.clientY - rect.top)  / rect.height - 0.5;
 			state.targetHover = 0.72;
 			start();
 		}

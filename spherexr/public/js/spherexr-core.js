@@ -160,9 +160,6 @@
 			var dir = interMode === 'repel' ? 1 : -1;
 			posX += dx * force * 0.08 * dir;
 			posY += dy * force * 0.06 * dir;
-		} else if (interMode === 'follow') {
-			posX += mx * depth * w * 0.15;
-			posY += my * depth * h * 0.12;
 		}
 
 		return { x: posX, y: posY, rx: bw, ry: bh };

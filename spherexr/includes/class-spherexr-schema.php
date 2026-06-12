@@ -13,5 +13,5 @@ class SphereXR_Schema {
 	const ANIM_TYPES         = array( 'drift', 'orbit', 'pulse', 'wave', 'fixed', 'figure8' );
 	const UNITS              = array( 'percent', 'px', 'vw', 'vh' );
 	const COLOR_MODES        = array( 'solid', 'dual', 'gradient' );
-	const INTERACTIVITY_MODES = array( 'parallax', 'repel', 'attract', 'follow', 'none' );
+	const INTERACTIVITY_MODES = array( 'parallax', 'repel', 'attract', 'none' );
 }

@@ -29,6 +29,7 @@
 
 	<?php
 	// Pass config + settings to JS via data attribute
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 	$js_data = array(
 		'postId'      => $is_new ? 0 : (int) $post->ID,
 		'isNew'       => $is_new,
@@ -56,7 +57,9 @@
 					<label>
 						<?php esc_html_e( 'Preview BG', 'spherexr' ); ?>
 						<?php
+						// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 						$preview_bg_val = $config['global']['preview_bg'] ?? 'transparent';
+						// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 						$preview_bg_hex = sanitize_hex_color( $preview_bg_val );
 						if ( ! $preview_bg_hex ) { $preview_bg_hex = '#ffffff'; }
 						?>
@@ -90,7 +93,7 @@
 					<label>
 						<?php esc_html_e( 'Blend Mode', 'spherexr' ); ?>
 						<select id="sxr-blend-mode">
-							<?php foreach ( SphereXR_Schema::BLEND_MODES as $bm ) : ?>
+							<?php foreach ( SphereXR_Schema::BLEND_MODES as $bm ) : // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>
 								<option value="<?php echo esc_attr( $bm ); ?>" <?php selected( $config['global']['blend_mode'] ?? 'screen', $bm ); ?>><?php echo esc_html( $bm ); ?></option>
 							<?php endforeach; ?>
 						</select>
@@ -198,7 +201,7 @@
 									'double'  => __( 'Double', 'spherexr' ),
 									'triple'  => __( 'Triple', 'spherexr' ),
 									'blob'    => __( 'Blob', 'spherexr' ),
-								) as $val => $label ) : ?>
+								) as $val => $label ) : // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>
 									<label class="sxr-shape-option">
 										<input type="radio" name="sxr-orb-shape" value="<?php echo esc_attr( $val ); ?>">
 										<span class="sxr-shape-preview sxr-shape-<?php echo esc_attr( $val ); ?>"></span>

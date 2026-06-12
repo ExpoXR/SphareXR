@@ -204,6 +204,7 @@
 /* ---- Settings form overrides ---- */
 .spherexr-settings-form {
 	max-width: 800px;
+	width: 100%;
 }
 
 .spherexr-settings-form h2 {

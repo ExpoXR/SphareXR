@@ -95,16 +95,20 @@ jQuery UI Sortable on `#cmxr-orb-list` in the configurator. Each `<li>` has `dat
 
 ## REST API
 
-Namespace: `cmxr/v1`. All endpoints require `edit_posts` capability + `X-WP-Nonce` header.
+Namespace: `cmxr/v1`. All endpoints require an `X-WP-Nonce` header. Permission callbacks
+enforce **object-level capabilities** (the CPT registers with `map_meta_cap => true`):
+collection routes check `edit_posts`; single-item routes check the meta cap for that post ID
+(`read_post` / `edit_post` / `delete_post`). `duplicate` and `toggle` require `edit_post` on
+the target. A missing/invalid ID defers to `edit_posts` so the handler returns a clean 404.
 
 ```
-GET    /animations
-POST   /animations
-GET    /animations/{id}
-PUT    /animations/{id}
-DELETE /animations/{id}
-POST   /animations/{id}/duplicate
-POST   /animations/{id}/toggle
+GET    /animations                  edit_posts
+POST   /animations                  edit_posts
+GET    /animations/{id}             read_post(id)
+PUT    /animations/{id}             edit_post(id)
+DELETE /animations/{id}             delete_post(id)
+POST   /animations/{id}/duplicate   edit_post(id)
+POST   /animations/{id}/toggle      edit_post(id)
 ```
 
 ## Settings Page — Tools

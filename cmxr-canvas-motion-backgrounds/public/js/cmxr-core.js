@@ -137,8 +137,12 @@
 		return pointer;
 	}
 
-	// Memoised hex → rgba string (colours/alpha repeat heavily across frames)
+	// Memoised hex → rgba string (colours/alpha repeat heavily across frames).
+	// Bounded so long-lived pages with many distinct alpha values can't grow it
+	// without limit — a finite palette stays well under the cap.
+	var RGBA_CACHE_MAX = 512;
 	var rgbaCache = {};
+	var rgbaCacheSize = 0;
 	function hexToRgba(hex, alpha) {
 		var key = hex + '|' + alpha;
 		var cached = rgbaCache[key];
@@ -147,7 +151,9 @@
 		var g = parseInt(hex.slice(3, 5), 16) || 0;
 		var b = parseInt(hex.slice(5, 7), 16) || 0;
 		var out = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+		if (rgbaCacheSize >= RGBA_CACHE_MAX) { rgbaCache = {}; rgbaCacheSize = 0; }
 		rgbaCache[key] = out;
+		rgbaCacheSize++;
 		return out;
 	}
 

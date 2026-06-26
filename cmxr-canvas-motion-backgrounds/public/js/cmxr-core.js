@@ -540,11 +540,35 @@
 		ctx.restore();
 	}
 
+	// Map a config blend mode to a valid canvas globalCompositeOperation.
+	// 'normal' is a CSS keyword, not a canvas op — assigning it is silently
+	// ignored by the browser, so translate it to 'source-over' (standard alpha
+	// compositing: an opaque upper orb fully covers lower ones, partial opacity
+	// blends proportionally). Unknown values fall back to 'source-over'.
+	var CANVAS_BLEND_OPS = {
+		'normal': 'source-over',
+		'source-over': 'source-over',
+		'screen': 'screen',
+		'multiply': 'multiply',
+		'overlay': 'overlay',
+		'lighten': 'lighten',
+		'darken': 'darken',
+		'hard-light': 'hard-light',
+		'soft-light': 'soft-light',
+		'color-dodge': 'color-dodge',
+		'color-burn': 'color-burn',
+	};
+
+	function blendOp(mode) {
+		return CANVAS_BLEND_OPS[mode] || 'source-over';
+	}
+
 	window.CMXRCore = {
 		PHI: PHI,
 		E: E,
 		clamp: clamp,
 		hexToRgba: hexToRgba,
+		blendOp: blendOp,
 		createPointerTracker: createPointerTracker,
 		hashSeed: hashSeed,
 		resolvePx: resolvePx,

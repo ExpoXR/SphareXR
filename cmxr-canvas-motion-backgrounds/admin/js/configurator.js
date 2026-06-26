@@ -1038,7 +1038,7 @@
 		previewCtx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
 		previewCtx.clearRect(0, 0, w, h);
 
-		var blendMode = config.global && config.global.blend_mode || 'screen';
+		var blendMode = Core.blendOp((config.global && config.global.blend_mode) || 'normal');
 		var safeMargin = (config.global && config.global.safe_margin) || 0;
 
 		// Interactivity — mirrors cmxr-engine.js draw()

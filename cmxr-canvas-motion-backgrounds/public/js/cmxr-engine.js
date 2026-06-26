@@ -165,7 +165,7 @@
 			ctx.clearRect(0, 0, w, h);
 
 			var g          = cfg.global || {};
-			var blendMode  = g.blend_mode || 'screen';
+			var blendMode  = Core.blendOp(g.blend_mode || 'normal');
 			var safeMargin = g.safe_margin || 0;
 			var interact   = g.interactivity || {};
 			var iEnabled   = (interact.enabled !== false) && interact.mode !== 'none';

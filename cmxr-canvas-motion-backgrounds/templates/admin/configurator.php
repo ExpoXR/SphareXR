@@ -109,7 +109,7 @@
 						<?php esc_html_e( 'Blend Mode', 'cmxr-canvas-motion-backgrounds' ); ?>
 						<select id="cmxr-blend-mode">
 							<?php foreach ( CMXR_Schema::BLEND_MODES as $bm ) : // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>
-								<option value="<?php echo esc_attr( $bm ); ?>" <?php selected( $config['global']['blend_mode'] ?? 'screen', $bm ); ?>><?php echo esc_html( $bm ); ?></option>
+								<option value="<?php echo esc_attr( $bm ); ?>" <?php selected( $config['global']['blend_mode'] ?? 'normal', $bm ); ?>><?php echo esc_html( $bm ); ?></option>
 							<?php endforeach; ?>
 						</select>
 					</label>

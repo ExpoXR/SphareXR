@@ -1,5 +1,14 @@
 /* CMXR — Configurator Layout (light WordPress admin theme) */
 
+/* WP core pins #wpfooter with position:absolute so it can glue to the bottom of a short
+   page. This page's editor body is sized to fill most of the viewport height, so its
+   bottom edge sits right where WP glues the footer — pull it into normal flow here so it
+   always renders below our content instead of overlapping the preview canvas. Scoped
+   safely: this stylesheet only loads on the Configurator screen. */
+#wpfooter {
+	position: relative;
+}
+
 /* ---- Studio brand strip ---- */
 .cmxr-studio-hero {
 	display: flex;
